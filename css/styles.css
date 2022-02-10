@@ -872,6 +872,7 @@ Single Page
 }
 .page-info{
   max-width: 700px;
+  text-align: center;
 }
 .page-info a{
   text-transform: uppercase;
@@ -943,4 +944,13 @@ Products Page
   /* grid-template-columns: repeat(auto-fill,minmax(330px,1fr)); */
   grid-template-columns: repeat(auto-fit,minmax(330px,1fr));
   gap: 3rem 1rem;
+}
+
+
+
+/* afterwards css */
+.contact-page-text{
+  display: grid;
+  grid-template-columns: repeat(1,fr);
+  justify-items: center;
 }
