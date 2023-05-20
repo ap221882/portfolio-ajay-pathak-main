@@ -343,6 +343,8 @@ Hero
 }
 .hero-img {
   display: none;
+  place-self: center;
+  z-index: 1;
 }
 .hero {
   background: var(--clr-primary-10);
@@ -350,7 +352,13 @@ Hero
 .hero-center {
   min-height: calc(100vh - 5rem);
   display: grid;
+}
+.hero-info {
+  position: relative;
+
+  display: grid;
   place-items: center;
+  z-index: 1;
 }
 .hero-info h4 {
   color: var(--clr-grey-5);
@@ -395,6 +403,10 @@ About
 ===============
 */
 /* section title added to globals */
+.about {
+  z-index: 1;
+  position: relative;
+}
 .about-title {
   text-align: left;
   margin-bottom: 2rem;
@@ -1036,4 +1048,28 @@ Products Page
     animation-timing-function: ease-out;
     opacity: 1;
   }
+}
+
+.rotate-center {
+  animation: rotate-center 5s linear infinite both;
+  position: relative;
+}
+
+@keyframes rotate-center {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hero-info-bg {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  width: 90%;
+  background: linear-gradient(rgba(35, 39, 47, 0.7), rgba(35, 39, 47, 0.5)),
+    url("../assets/logo.svg") center no-repeat;
 }
