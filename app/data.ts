@@ -49,27 +49,27 @@ export const PROJECTS: Project[] = [
 
 export const WORK_EXPERIENCE: WorkExperience[] = [
   {
-    company: 'Reglazed Studio',
-    title: 'CEO',
-    start: '2024',
+    company: 'Groww',
+    title: 'Software Engineer',
+    start: 'May 2024',
     end: 'Present',
-    link: 'https://ibelick.com',
+    link: 'https://groww.in',
     id: 'work1',
   },
   {
-    company: 'Freelance',
-    title: 'Design Engineer',
-    start: '2022',
-    end: '2024',
-    link: 'https://ibelick.com',
+    company: 'Uniblox',
+    title: 'Frontend Engineer',
+    start: 'Nov 2023',
+    end: 'Apr 2024',
+    link: 'https://www.uniblox.io',
     id: 'work2',
   },
   {
-    company: 'Freelance',
-    title: 'Front-end Developer',
-    start: '2017',
-    end: 'Present',
-    link: 'https://ibelick.com',
+    company: 'Naehas',
+    title: 'Software Developer',
+    start: 'Jan 2022',
+    end: 'Nov 2023',
+    link: 'https://www.naehas.com/',
     id: 'work3',
   },
 ]
@@ -100,20 +100,20 @@ export const BLOG_POSTS: BlogPost[] = [
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     label: 'Github',
-    link: 'https://github.com/ibelick',
+    link: 'https://github.com/ap221882',
   },
   {
-    label: 'Twitter',
-    link: 'https://twitter.com/ibelick',
+    label: 'X',
+    link: 'https://x.com/Pathkbndhu_navo',
   },
   {
     label: 'LinkedIn',
-    link: 'https://www.linkedin.com/in/ibelick',
+    link: 'https://www.linkedin.com/in/ajay-pathak-developer/',
   },
-  {
-    label: 'Instagram',
-    link: 'https://www.instagram.com/ibelick',
-  },
+  // {
+  //   label: 'Instagram',
+  //   link: 'https://www.instagram.com/ibelick',
+  // },
 ]
 
-export const EMAIL = 'your@email.com'
+export const EMAIL = 'engineering.ajaypathak@gmail.com'

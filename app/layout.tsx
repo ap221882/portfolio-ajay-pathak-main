@@ -1,9 +1,17 @@
-import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
-import { Header } from './header'
-import { Footer } from './footer'
-import { ThemeProvider } from 'next-themes'
+import './globals.css';
+
+import type {
+  Metadata,
+  Viewport,
+} from 'next';
+import { ThemeProvider } from 'next-themes';
+import {
+  Geist,
+  Geist_Mono,
+} from 'next/font/google';
+
+import { Footer } from './footer';
+import { Header } from './header';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -12,9 +20,9 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Nim - Personal website template',
+  title: 'Ajay Pathak - centers div for paycheck',
   description:
-    'Nim is a free and open-source personal website template built with Next.js 15, React 19 and Motion-Primitives.',
+    'Ajay is a frontend engineer with years of experience in building scalable frontend projects',
 }
 
 const geist = Geist({

@@ -1,24 +1,22 @@
 'use client'
-import { motion } from 'motion/react'
-import { XIcon } from 'lucide-react'
-import { Spotlight } from '@/components/ui/spotlight'
-import { Magnetic } from '@/components/ui/magnetic'
+import { XIcon } from 'lucide-react';
+import { motion } from 'motion/react';
+
+import { Magnetic } from '@/components/ui/magnetic';
 import {
   MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
   MorphingDialogClose,
   MorphingDialogContainer,
-} from '@/components/ui/morphing-dialog'
-import Link from 'next/link'
-import { AnimatedBackground } from '@/components/ui/animated-background'
+  MorphingDialogContent,
+  MorphingDialogTrigger,
+} from '@/components/ui/morphing-dialog';
+import { Spotlight } from '@/components/ui/spotlight';
+
 import {
-  PROJECTS,
-  WORK_EXPERIENCE,
-  BLOG_POSTS,
   EMAIL,
   SOCIAL_LINKS,
-} from './data'
+  WORK_EXPERIENCE,
+} from './data';
 
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 0 },
@@ -137,12 +135,11 @@ export default function Personal() {
       >
         <div className="flex-1">
           <p className="text-zinc-600 dark:text-zinc-400">
-            Focused on creating intuitive and performant web experiences.
-            Bridging the gap between design and development.
+          I write HTML, draw CSS, and talk JavaScript. I am currently a web and app developer in general and a front-end developer in particular. I LOVE BROWSERS. In the world of frameworks, I'm a ReactJS/React Native Developer and a NextJS artist. I am proficient in building production-grade web applications following Agile and Test-Driven Development.
           </p>
         </div>
       </motion.section>
-
+{/* 
       <motion.section
         variants={VARIANTS_SECTION}
         transition={TRANSITION_SECTION}
@@ -170,7 +167,7 @@ export default function Personal() {
             </div>
           ))}
         </div>
-      </motion.section>
+      </motion.section> */}
 
       <motion.section
         variants={VARIANTS_SECTION}
@@ -210,7 +207,7 @@ export default function Personal() {
         </div>
       </motion.section>
 
-      <motion.section
+      {/* <motion.section
         variants={VARIANTS_SECTION}
         transition={TRANSITION_SECTION}
       >
@@ -244,7 +241,7 @@ export default function Personal() {
             ))}
           </AnimatedBackground>
         </div>
-      </motion.section>
+      </motion.section> */}
 
       <motion.section
         variants={VARIANTS_SECTION}
