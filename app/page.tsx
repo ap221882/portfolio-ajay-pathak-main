@@ -1,22 +1,18 @@
-'use client'
-import { XIcon } from 'lucide-react';
-import { motion } from 'motion/react';
+"use client";
+import { XIcon } from "lucide-react";
+import { motion } from "motion/react";
 
-import { Magnetic } from '@/components/ui/magnetic';
+import { Magnetic } from "@/components/ui/magnetic";
 import {
   MorphingDialog,
   MorphingDialogClose,
   MorphingDialogContainer,
   MorphingDialogContent,
   MorphingDialogTrigger,
-} from '@/components/ui/morphing-dialog';
-import { Spotlight } from '@/components/ui/spotlight';
+} from "@/components/ui/morphing-dialog";
+import { Spotlight } from "@/components/ui/spotlight";
 
-import {
-  EMAIL,
-  SOCIAL_LINKS,
-  WORK_EXPERIENCE,
-} from './data';
+import { EMAIL, SOCIAL_LINKS, WORK_EXPERIENCE } from "./data";
 
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 0 },
@@ -26,26 +22,26 @@ const VARIANTS_CONTAINER = {
       staggerChildren: 0.15,
     },
   },
-}
+};
 
 const VARIANTS_SECTION = {
-  hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
-}
+  hidden: { opacity: 0, y: 20, filter: "blur(8px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+};
 
 const TRANSITION_SECTION = {
   duration: 0.3,
-}
+};
 
 type ProjectVideoProps = {
-  src: string
-}
+  src: string;
+};
 
 function ProjectVideo({ src }: ProjectVideoProps) {
   return (
     <MorphingDialog
       transition={{
-        type: 'spring',
+        type: "spring",
         bounce: 0,
         duration: 0.3,
       }}
@@ -84,15 +80,15 @@ function ProjectVideo({ src }: ProjectVideoProps) {
         </MorphingDialogClose>
       </MorphingDialogContainer>
     </MorphingDialog>
-  )
+  );
 }
 
 function MagneticSocialLink({
   children,
   link,
 }: {
-  children: React.ReactNode
-  link: string
+  children: React.ReactNode;
+  link: string;
 }) {
   return (
     <Magnetic springOptions={{ bounce: 0 }} intensity={0.3}>
@@ -118,7 +114,7 @@ function MagneticSocialLink({
         </svg>
       </a>
     </Magnetic>
-  )
+  );
 }
 
 export default function Personal() {
@@ -135,11 +131,16 @@ export default function Personal() {
       >
         <div className="flex-1">
           <p className="text-zinc-600 dark:text-zinc-400">
-          I write HTML, draw CSS, and talk JavaScript. I am currently a web and app developer in general and a front-end developer in particular. I LOVE BROWSERS. In the world of frameworks, I'm a ReactJS/React Native Developer and a NextJS artist. I am proficient in building production-grade web applications following Agile and Test-Driven Development.
+            I write HTML, draw CSS, and talk JavaScript. I am currently a web
+            and app developer in general and a front-end developer in
+            particular. I LOVE BROWSERS. In the world of frameworks, I am a
+            ReactJS/React Native Developer and a NextJS artist. I am proficient
+            in building production-grade web applications following Agile and
+            Test-Driven Development.
           </p>
         </div>
       </motion.section>
-{/* 
+      {/* 
       <motion.section
         variants={VARIANTS_SECTION}
         transition={TRANSITION_SECTION}
@@ -249,7 +250,7 @@ export default function Personal() {
       >
         <h3 className="mb-5 text-lg font-medium">Connect</h3>
         <p className="mb-5 text-zinc-600 dark:text-zinc-400">
-          Feel free to contact me at{' '}
+          Feel free to contact me at{" "}
           <a className="underline dark:text-zinc-300" href={`mailto:${EMAIL}`}>
             {EMAIL}
           </a>
@@ -263,5 +264,5 @@ export default function Personal() {
         </div>
       </motion.section>
     </motion.main>
-  )
+  );
 }

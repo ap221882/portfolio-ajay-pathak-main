@@ -1,1 +1,1 @@
-export const WEBSITE_URL = 'https://ajay-pathak.com'
+export const WEBSITE_URL = "https://ajay-pathak.com";

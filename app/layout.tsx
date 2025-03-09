@@ -1,44 +1,38 @@
-import './globals.css';
+import "./globals.css";
 
-import type {
-  Metadata,
-  Viewport,
-} from 'next';
-import { ThemeProvider } from 'next-themes';
-import {
-  Geist,
-  Geist_Mono,
-} from 'next/font/google';
+import type { Metadata, Viewport } from "next";
+import { ThemeProvider } from "next-themes";
+import { Geist, Geist_Mono } from "next/font/google";
 
-import { Footer } from './footer';
-import { Header } from './header';
+import { Footer } from "./footer";
+import { Header } from "./header";
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
-  themeColor: '#ffffff',
-}
+  themeColor: "#ffffff",
+};
 
 export const metadata: Metadata = {
-  title: 'Ajay Pathak - centers div for paycheck',
+  title: "Ajay Pathak - centers div for paycheck",
   description:
-    'Ajay is a frontend engineer with years of experience in building scalable frontend projects',
-}
+    "Ajay is a frontend engineer with years of experience in building scalable frontend projects",
+};
 
 const geist = Geist({
-  variable: '--font-geist',
-  subsets: ['latin'],
-})
+  variable: "--font-geist",
+  subsets: ["latin"],
+});
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -61,5 +55,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
