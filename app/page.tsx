@@ -1,18 +1,23 @@
 "use client";
-import { XIcon } from "lucide-react";
-import { motion } from "motion/react";
+import { XIcon } from 'lucide-react';
+import { motion } from 'motion/react';
 
-import { Magnetic } from "@/components/ui/magnetic";
+import { Magnetic } from '@/components/ui/magnetic';
 import {
   MorphingDialog,
   MorphingDialogClose,
   MorphingDialogContainer,
   MorphingDialogContent,
   MorphingDialogTrigger,
-} from "@/components/ui/morphing-dialog";
-import { Spotlight } from "@/components/ui/spotlight";
+} from '@/components/ui/morphing-dialog';
+import FullPageScroll from '@/components/ui/scroll';
+import { Spotlight } from '@/components/ui/spotlight';
 
-import { EMAIL, SOCIAL_LINKS, WORK_EXPERIENCE } from "./data";
+import {
+  EMAIL,
+  SOCIAL_LINKS,
+  WORK_EXPERIENCE,
+} from './data';
 
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 0 },
@@ -118,7 +123,10 @@ function MagneticSocialLink({
 }
 
 export default function Personal() {
+  
   return (
+   <>
+   <FullPageScroll/>
     <motion.main
       className="space-y-24"
       variants={VARIANTS_CONTAINER}
@@ -188,7 +196,7 @@ export default function Personal() {
                 className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
                 size={64}
               />
-              <div className="relative h-full w-full rounded-[15px] bg-white p-4 dark:bg-zinc-950">
+              <div className={`relative h-full w-full rounded-[15px] bg-white p-4 dark:bg-zinc-950`}>
                 <div className="relative flex w-full flex-row justify-between">
                   <div>
                     <h4 className="font-normal dark:text-zinc-100">
@@ -264,5 +272,6 @@ export default function Personal() {
         </div>
       </motion.section>
     </motion.main>
+   </>
   );
 }

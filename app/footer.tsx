@@ -1,11 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from 'react';
 
-import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
-import { useTheme } from "next-themes";
+import {
+  MonitorIcon,
+  MoonIcon,
+  SunIcon,
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
 
-import { AnimatedBackground } from "@/components/ui/animated-background";
-import { TextLoop } from "@/components/ui/text-loop";
+import { AnimatedBackground } from '@/components/ui/animated-background';
+import { TextLoop } from '@/components/ui/text-loop';
 
 const THEMES_OPTIONS = [
   {
@@ -74,7 +81,7 @@ export function Footer() {
       <div className="flex items-center justify-between">
         <a href="https://github.com/ibelick/nim" target="_blank">
           <TextLoop className="text-xs text-zinc-500">
-            <span>© 2025 Ajay.</span>
+            <span>© 2025 Ajay Pathak.</span>
             <span>Built with love from India.</span>
           </TextLoop>
         </a>

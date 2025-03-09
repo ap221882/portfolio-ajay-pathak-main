@@ -66,7 +66,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
   },
   {
     company: "Naehas",
-    title: "Software Developer",
+    title: "Software Engineer",
     start: "Jan 2022",
     end: "Nov 2023",
     link: "https://www.naehas.com/",
