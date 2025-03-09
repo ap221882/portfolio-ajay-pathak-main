@@ -1,11 +1,14 @@
 "use client";
-import { cn } from "@/lib/utils";
+
+import { useId, useMemo } from "react";
+
 import { AnimatePresence, motion, Transition, Variants } from "motion/react";
-import { useMemo, useId } from "react";
+
+import { cn } from "@/lib/utils";
 
 export type TextMorphProps = {
   children: string;
-  as?: React.ElementType;
+  as?: any;
   className?: string;
   style?: React.CSSProperties;
   variants?: Variants;
