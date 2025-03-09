@@ -1,23 +1,19 @@
 "use client";
-import { XIcon } from 'lucide-react';
-import { motion } from 'motion/react';
+import { XIcon } from "lucide-react";
+import { motion } from "motion/react";
 
-import { Magnetic } from '@/components/ui/magnetic';
+import { Magnetic } from "@/components/ui/magnetic";
 import {
   MorphingDialog,
   MorphingDialogClose,
   MorphingDialogContainer,
   MorphingDialogContent,
   MorphingDialogTrigger,
-} from '@/components/ui/morphing-dialog';
-import FullPageScroll from '@/components/ui/scroll';
-import { Spotlight } from '@/components/ui/spotlight';
+} from "@/components/ui/morphing-dialog";
+import FullPageScroll from "@/components/ui/scroll";
+import { Spotlight } from "@/components/ui/spotlight";
 
-import {
-  EMAIL,
-  SOCIAL_LINKS,
-  WORK_EXPERIENCE,
-} from './data';
+import { EMAIL, SOCIAL_LINKS, WORK_EXPERIENCE } from "./data";
 
 const VARIANTS_CONTAINER = {
   hidden: { opacity: 0 },

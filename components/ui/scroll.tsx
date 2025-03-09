@@ -1,11 +1,8 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 
-import {
-  motion,
-  useScroll,
-} from 'motion/react';
+import { motion, useScroll } from "motion/react";
 
 const FullPageScroll = () => {
   const { scrollYProgress } = useScroll();

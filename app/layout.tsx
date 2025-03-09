@@ -1,19 +1,13 @@
-import './globals.css';
+import "./globals.css";
 
-import type {
-  Metadata,
-  Viewport,
-} from 'next';
-import { ThemeProvider } from 'next-themes';
-import {
-  Geist,
-  Geist_Mono,
-} from 'next/font/google';
+import type { Metadata, Viewport } from "next";
+import { ThemeProvider } from "next-themes";
+import { Geist, Geist_Mono } from "next/font/google";
 
-import ThreeDBackground from '@/components/ui/ThreeDBg';
+import ThreeDBackground from "@/components/ui/ThreeDBg";
 
-import { Footer } from './footer';
-import { Header } from './header';
+import { Footer } from "./footer";
+import { Header } from "./header";
 
 export const viewport: Viewport = {
   width: "device-width",
