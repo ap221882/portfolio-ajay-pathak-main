@@ -42,13 +42,13 @@ export default function RootLayout({
         className={`${geist.variable} ${geistMono.variable} bg-white tracking-tight antialiased dark:bg-zinc-950`}
       >
         <div style={{ width: "100vw", height: "100%", position: "relative" }}>
-          <ThreeDBackground />
           <ThemeProvider
             enableSystem={true}
             attribute="class"
             storageKey="theme"
             defaultTheme="system"
           >
+            <ThreeDBackground />
             <div className="flex min-h-screen w-full flex-col font-[family-name:var(--font-inter-tight)]">
               <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20">
                 <Header />

@@ -1,11 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from 'react';
 
-import { MoonIcon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { MoonIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
-import { AnimatedBackground } from "@/components/ui/animated-background";
-import { TextLoop } from "@/components/ui/text-loop";
+import { AnimatedBackground } from '@/components/ui/animated-background';
+import { TextLoop } from '@/components/ui/text-loop';
 
 const THEMES_OPTIONS = [
   // ~> fix for background then enable light mode
@@ -41,7 +44,7 @@ function ThemeSwitch() {
   return (
     <AnimatedBackground
       className="pointer-events-none rounded-lg bg-zinc-100 dark:bg-zinc-800"
-      defaultValue={theme}
+      defaultValue={"dark"}
       transition={{
         type: "spring",
         bounce: 0,

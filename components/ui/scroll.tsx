@@ -1,12 +1,20 @@
 "use client";
 
-import React from "react";
+import React from 'react';
 
-import { motion, useScroll } from "motion/react";
+import {
+  motion,
+  useScroll,
+} from 'motion/react';
+import { useTheme } from 'next-themes';
 
 const FullPageScroll = () => {
   const { scrollYProgress } = useScroll();
+  const { theme } = useTheme();
 
+  if (theme === "light") {
+    return null;
+  }
   return (
     <>
       <motion.div
