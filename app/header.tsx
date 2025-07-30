@@ -1,7 +1,7 @@
 "use client";
-import Link from "next/link";
+import Link from 'next/link';
 
-import { TextEffect } from "@/components/ui/text-effect";
+import { TextEffect } from '@/components/ui/text-effect';
 
 export function Header() {
   return (

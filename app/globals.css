@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import "tw-animate-css";
 @plugin '@tailwindcss/typography';
 @custom-variant dark (&:is(.dark *));
 
@@ -18,4 +19,14 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+}
+
+
+[cmdk-list] {
+  min-height: 300px;
+  height: var(--cmdk-list-height);
+  max-height: 500px;
+  transition: height 100ms ease;
+  scroll-padding-block-start: 8px;
+  scroll-padding-block-end: 8px;
 }
