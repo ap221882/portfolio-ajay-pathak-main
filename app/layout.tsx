@@ -1,13 +1,17 @@
-import "./globals.css";
+import './globals.css';
 
-import type { Metadata, Viewport } from "next";
-import { ThemeProvider } from "next-themes";
-import { Geist, Geist_Mono } from "next/font/google";
+import type {
+  Metadata,
+  Viewport,
+} from 'next';
+import { ThemeProvider } from 'next-themes';
+import {
+  Geist,
+  Geist_Mono,
+} from 'next/font/google';
 
-import ThreeDBackground from "@/components/ui/ThreeDBg";
-
-import { Footer } from "./footer";
-import { Header } from "./header";
+import { Footer } from './footer';
+import { Header } from './header';
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -46,9 +50,8 @@ export default function RootLayout({
             enableSystem={true}
             attribute="class"
             storageKey="theme"
-            defaultTheme="system"
+            defaultTheme="dark"
           >
-            <ThreeDBackground />
             <div className="flex min-h-screen w-full flex-col font-[family-name:var(--font-inter-tight)]">
               <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20">
                 <Header />
