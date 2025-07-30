@@ -2,6 +2,11 @@
   "name": "ajay",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Ajay Pathak",
+    "email": "engineering.ajaypathak@gmail.com",
+    "url": "https://ajay-pathak.com"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
