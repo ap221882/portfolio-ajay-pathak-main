@@ -1,9 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from 'react';
 
-import { User } from "lucide-react";
-import { useRouter } from "next/navigation";
+import {
+  Pen,
+  User,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import {
   Command,
@@ -14,7 +20,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command";
+} from '@/components/ui/command';
 
 const Main = () => {
   const [val, setVal] = useState("");
@@ -56,6 +62,17 @@ const Main = () => {
             <CommandItem className="cursor-pointer">
               <User />
               <span>Profile</span>
+              <CommandShortcut>⌘P</CommandShortcut>
+            </CommandItem>
+          </div>
+          <div
+            onClick={() => {
+              router.push("/poems");
+            }}
+          >
+            <CommandItem className="cursor-pointer">
+              <Pen />
+              <span>Poems</span>
               <CommandShortcut>⌘P</CommandShortcut>
             </CommandItem>
           </div>

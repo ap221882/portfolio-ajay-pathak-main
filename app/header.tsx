@@ -17,7 +17,7 @@ export function Header() {
           className="text-zinc-600 dark:text-zinc-500"
           delay={0.5}
         >
-          {`const About = (JavaScript) => (React.js, Next.js)`}
+          {`Software Engineer | Poet | Writer`}
         </TextEffect>
       </div>
     </header>
