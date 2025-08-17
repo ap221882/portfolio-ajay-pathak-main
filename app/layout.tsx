@@ -9,6 +9,7 @@ import {
   Geist,
   Geist_Mono,
 } from 'next/font/google';
+import Script from 'next/script';
 
 import { Footer } from './footer';
 import { Header } from './header';
@@ -42,6 +43,31 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          id="person-schema"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Ajay Pathak",
+              url: "https://ajay-pathak.com",
+              sameAs: [
+                "https://www.linkedin.com/in/ajay-pathak-developer/",
+                "https://github.com/ap221882",
+                "https://x.com/Pathkbndhu_navo",
+              ],
+              jobTitle: "Frontend Developer",
+              worksFor: {
+                "@type": "Organization",
+                name: "Freelance / Remote",
+              },
+            }),
+          }}
+        />
+      </head>
       <body
         className={`${geist.variable} ${geistMono.variable} bg-white tracking-tight antialiased dark:bg-zinc-950`}
       >
@@ -53,7 +79,7 @@ export default function RootLayout({
             defaultTheme="dark"
           >
             <div className="flex min-h-screen w-full flex-col font-[family-name:var(--font-inter-tight)]">
-              <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20 flex flex-col justify-between">
+              <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20 flex flex-col">
                 <Header />
                 {children}
                 <Footer />
