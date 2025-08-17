@@ -15,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: "https://ajay-pathak.com/blog",
+      url: "https://ajay-pathak.com/blog/exploring-the-intersection-of-design-ai-and-design-engineering",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
