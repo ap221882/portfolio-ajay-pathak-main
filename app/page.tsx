@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+import MinimalSelectorHero from '@/components/Hero';
 import {
   Command,
   CommandEmpty,
@@ -40,6 +41,12 @@ const Main = () => {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, [val]);
+
+  return (
+    <>
+      <MinimalSelectorHero />
+    </>
+  );
 
   return (
     <Command className="rounded-lg border shadow-md md:min-w-[450px]">

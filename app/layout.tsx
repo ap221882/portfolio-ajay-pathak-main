@@ -11,9 +11,6 @@ import {
 } from 'next/font/google';
 import Script from 'next/script';
 
-import { Footer } from './footer';
-import { Header } from './header';
-
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -78,11 +75,11 @@ export default function RootLayout({
             storageKey="theme"
             defaultTheme="dark"
           >
-            <div className="flex min-h-screen w-full flex-col font-[family-name:var(--font-inter-tight)]">
-              <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20 flex flex-col">
-                <Header />
+            <div className="flex h-screen w-full flex-col font-[family-name:var(--font-inter-tight)]">
+              <div className="relative mx-auto w-full flex-1">
+                {/* <Header /> */}
                 {children}
-                <Footer />
+                {/* <Footer /> */}
               </div>
             </div>
           </ThemeProvider>
