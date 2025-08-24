@@ -13,6 +13,8 @@ import {
   useReducedMotion,
 } from 'framer-motion';
 
+import EnterScreen from './trials/EnterScreen';
+
 const ROLES = [
   {
     id: "engineer",
@@ -100,7 +102,7 @@ export default function HeroSelector() {
           {...headlineVariants}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium leading-tight"
         >
-          Enter personalities
+          <EnterScreen />
         </motion.h1>
       </div>
     </motion.div>
