@@ -55,5 +55,6 @@
     "tailwindcss": "^4.0.0",
     "tw-animate-css": "^1.3.6",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.15.0+sha256.84c19e788d7d7ee248e4a6b7152f8ebba0f4fe7380a5f443ca17d76c030052d2"
 }

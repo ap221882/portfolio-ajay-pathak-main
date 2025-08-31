@@ -1,19 +1,12 @@
 "use client";
 
-import './hero.css';
+import "./hero.css";
 
-import React, {
-  useEffect,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from "react";
 
-import {
-  Easing,
-  motion,
-  useReducedMotion,
-} from 'framer-motion';
+import { Easing, motion, useReducedMotion } from "framer-motion";
 
-import EnterScreen from './trials/EnterScreen';
+import EnterScreen from "./trials/EnterScreen";
 
 const ROLES = [
   {
@@ -97,13 +90,8 @@ export default function HeroSelector() {
           </motion.h1>
         </div>
       </header>
-      <div className="flex items-center justify-center h-full">
-        <motion.h1
-          {...headlineVariants}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium leading-tight"
-        >
-          <EnterScreen />
-        </motion.h1>
+      <div className="relative w-full h-screen">
+        <EnterScreen />
       </div>
     </motion.div>
   );
