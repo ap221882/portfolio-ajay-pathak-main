@@ -39,7 +39,7 @@ const Child = ({ enterClicked }: { enterClicked: boolean }) => {
     <mesh ref={ref}>
       <ambientLight intensity={0.25} />
       <directionalLight position={[0, 0, 0]} />
-      <Suspense fallback={<progress />}>
+      <Suspense fallback={null}>
         <Model />
       </Suspense>
       {/* <OrbitControls /> */}
