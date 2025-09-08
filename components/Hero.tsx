@@ -1,12 +1,18 @@
 "use client";
 
-import "./hero.css";
+import './hero.css';
 
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from 'react';
 
-import { Easing, motion, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+} from 'framer-motion';
 
-import EnterScreen from "./trials/EnterScreen";
+import EnterScreen from './trials/EnterScreen';
 
 const ROLES = [
   {
@@ -30,8 +36,9 @@ const ROLES = [
 ];
 
 export default function HeroSelector() {
-  const [focused, setFocused] = useState(0);
   const shouldReduceMotion = useReducedMotion();
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
 
   // ensure first chip is keyboard-focusable on mount
   useEffect(() => {
@@ -39,59 +46,67 @@ export default function HeroSelector() {
     if (el) el.setAttribute("tabindex", "0");
   }, []);
 
-  // keyboard nav
-  function onKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "ArrowRight") {
-      setFocused((p) => Math.min(p + 1, ROLES.length - 1));
-      e.preventDefault();
-    } else if (e.key === "ArrowLeft") {
-      setFocused((p) => Math.max(p - 1, 0));
-      e.preventDefault();
-    }
-  }
-
-  // focus anchor when focused index changes
   useEffect(() => {
-    const el = document.querySelector<HTMLElement>(
-      `[data-role="role-${focused}"]`
-    );
-    if (el) el.focus();
-  }, [focused]);
+    const updateDateTime = () => {
+      const now = new Date();
 
-  // motion variants
+      // --- Date ---
+      const day = now.getDate();
+      const month = now.toLocaleString("en-US", { month: "short" });
+      const year = now.getFullYear();
+
+      const suffix =
+        day % 10 === 1 && day !== 11
+          ? "st"
+          : day % 10 === 2 && day !== 12
+            ? "nd"
+            : day % 10 === 3 && day !== 13
+              ? "rd"
+              : "th";
+
+      setDate(`${day}${suffix} ${month} ${year}`);
+
+      // --- Time ---
+      const currentTime = now.toLocaleTimeString("en-GB", {
+        hour12: false, // 24h format
+      });
+
+      setTime(currentTime);
+    };
+
+    updateDateTime(); // run immediately
+    const timer = setInterval(updateDateTime, 1000); // update every second
+
+    return () => clearInterval(timer); // cleanup
+  }, []);
+
   const headlineVariants = shouldReduceMotion
     ? {}
     : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 } };
-  const chipVariant = (i: number) =>
-    shouldReduceMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 6 },
-          animate: { opacity: 1, y: 0 },
-          transition: {
-            delay: 0.12 + i * 0.05,
-            duration: 0.28,
-            ease: "easeOut" as Easing,
-          },
-        };
 
   return (
     <motion.div className="grid flex-1 h-full heroContainer">
-      <header className="flex p-10 border-b">
-        <div className="max-w-4xl w-full text-center m-auto">
-          <div className="mb-6">
-            <p className="text-sm uppercase tracking-widest">Ajay Pathak</p>
+      <header className="flex border-b">
+        <div className="w-full text-center m-auto">
+          <div className="mb-6 mx-6 pt-4">
+            <div className="flex justify-between">
+              <p className="text-sm uppercase tracking-widest">{date}</p>
+              <p className="text-sm uppercase tracking-widest">{time}</p>
+              <p className="text-sm uppercase tracking-widest">Ajay Pathak</p>
+            </div>
           </div>
           <motion.h1
             {...headlineVariants}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium leading-tight pb-4"
           >
             I build what product needs.
           </motion.h1>
         </div>
       </header>
-      <div className="relative w-full h-screen">
-        <EnterScreen />
+      <div className="relative w-full">
+        <div className="flex items-center justify-center h-full w-full">
+          <EnterScreen />
+        </div>
       </div>
     </motion.div>
   );

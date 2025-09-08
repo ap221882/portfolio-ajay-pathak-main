@@ -1,29 +1,42 @@
-import { Suspense } from "react";
+"use client";
 
-import { OrbitControls, useGLTF } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import {
+  Suspense,
+  useRef,
+} from 'react';
 
-function Model() {
-  const { scene } = useGLTF("/model.glb"); // path relative to public/
-  return <primitive object={scene} scale={0.5} position={[0, 0, 0]} />;
-}
+import { Mesh } from 'three';
+
+import {
+  useFrame,
+  useThree,
+} from '@react-three/fiber';
+
+import Model from './Model';
 
 const Child = () => {
   const { camera } = useThree();
+  const ref = useRef<Mesh>(null);
+
+  useFrame((_, delta) => {
+    if (ref.current) {
+      ref.current.rotation.y = ref.current.rotation.y + delta;
+    }
+  });
 
   useFrame(() => {
     camera.lookAt(0, 0, 0);
   });
 
   return (
-    <>
+    <mesh ref={ref}>
       <ambientLight intensity={0.25} />
       <directionalLight position={[0, 0, 0]} />
-      <Suspense fallback={null}>
+      <Suspense fallback={<progress />}>
         <Model />
       </Suspense>
-      <OrbitControls />
-    </>
+      {/* <OrbitControls /> */}
+    </mesh>
   );
 };
 

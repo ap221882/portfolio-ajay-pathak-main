@@ -5,23 +5,9 @@ import {
   useState,
 } from 'react';
 
-import {
-  Pen,
-  User,
-} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import MinimalSelectorHero from '@/components/Hero';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from '@/components/ui/command';
 
 const Main = () => {
   const [val, setVal] = useState("");
@@ -46,56 +32,6 @@ const Main = () => {
     <>
       <MinimalSelectorHero />
     </>
-  );
-
-  return (
-    <Command className="rounded-lg border shadow-md md:min-w-[450px]">
-      <CommandInput
-        placeholder="Type a command or search..."
-        value={val}
-        onChangeCapture={(e: any) => {
-          setVal(e.target.value);
-        }}
-      />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandSeparator />
-        <CommandGroup heading="Suggestions">
-          <div
-            onClick={() => {
-              router.push("/about");
-            }}
-          >
-            <CommandItem className="cursor-pointer">
-              <User />
-              <span>Profile</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-          </div>
-          <div
-            onClick={() => {
-              router.push("/poems");
-            }}
-          >
-            <CommandItem className="cursor-pointer">
-              <Pen />
-              <span>Poems</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-          </div>
-          {/* <CommandItem>
-            <CreditCard />
-            <span>Billing</span>
-            <CommandShortcut>⌘B</CommandShortcut>
-          </CommandItem>
-          <CommandItem>
-            <Settings />
-            <span>Settings</span>
-            <CommandShortcut>⌘S</CommandShortcut>
-          </CommandItem> */}
-        </CommandGroup>
-      </CommandList>
-    </Command>
   );
 };
 
