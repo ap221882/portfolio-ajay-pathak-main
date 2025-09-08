@@ -11,7 +11,9 @@ import {
   motion,
   useReducedMotion,
 } from 'framer-motion';
+import { CornerDownRight } from 'lucide-react';
 
+import CustomCursor from './customCursor/CustomCursor';
 import EnterScreen from './trials/EnterScreen';
 
 const ROLES = [
@@ -85,7 +87,7 @@ export default function HeroSelector() {
     : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 } };
 
   return (
-    <motion.div className="grid flex-1 h-full heroContainer">
+    <motion.div className="grid flex-1 h-full heroContainer cursor-none bg-black">
       <header className="flex border-b">
         <div className="w-full text-center m-auto">
           <div className="mb-6 mx-6 pt-4">
@@ -99,13 +101,23 @@ export default function HeroSelector() {
             {...headlineVariants}
             className="text-4xl sm:text-3xl md:text-6xl lg:text-5xl font-medium leading-tight pb-4"
           >
-            I build what product needs.
+            One man, different personalities
           </motion.h1>
         </div>
       </header>
+      <CustomCursor />
       <div className="relative w-full">
         <div className="enter-text-container">
-          <h2 className="enter-world-text">Enter World</h2>
+          <h2 className="enter-world-text relative group overflow-hidden text-white">
+            <span className="inline-block">
+              <CornerDownRight />
+            </span>
+            <p>
+              Enter World
+              <span className="absolute inset-0 -z-10 bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-indigo-500/30 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+            </p>
+            {/* BG effect */}
+          </h2>
         </div>
         <div className="flex items-center justify-center h-full w-full model-container">
           <EnterScreen />
