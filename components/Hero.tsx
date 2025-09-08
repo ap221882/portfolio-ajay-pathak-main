@@ -114,15 +114,18 @@ export default function HeroSelector() {
             setEnterClicked(true);
           }}
         >
-          <h2 className="enter-world-text relative group overflow-hidden text-white hover:scale-105 transition-transform">
+          <h2
+            className={`relative group overflow-hidden text-white hover:scale-105 transition-transform ${enterClicked ? "hidden" : "enter-world-text"}`}
+          >
             <span className="inline-block">
               <CornerDownRight />
             </span>
             <p>Enter World</p>
-            {/* BG effect */}
           </h2>
         </div>
-        <div className="flex items-center justify-center h-full w-full model-container">
+        <div
+          className={`flex items-center justify-center h-full w-full ${enterClicked ? "model-container-not-blurred" : "model-container"}`}
+        >
           <EnterScreen enterClicked={enterClicked} />
         </div>
       </div>
