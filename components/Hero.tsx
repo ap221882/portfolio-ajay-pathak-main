@@ -97,7 +97,7 @@ export default function HeroSelector() {
           </div>
           <motion.h1
             {...headlineVariants}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium leading-tight pb-4"
+            className="text-4xl sm:text-3xl md:text-6xl lg:text-5xl font-medium leading-tight pb-4"
           >
             I build what product needs.
           </motion.h1>
