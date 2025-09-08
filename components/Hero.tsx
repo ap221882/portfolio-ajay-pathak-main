@@ -108,7 +108,7 @@ export default function HeroSelector() {
       <CustomCursor />
       <div className="relative w-full">
         <div className="enter-text-container">
-          <h2 className="enter-world-text relative group overflow-hidden text-white">
+          <h2 className="enter-world-text relative group overflow-hidden text-white hover:scale-105 transition-transform">
             <span className="inline-block">
               <CornerDownRight />
             </span>
