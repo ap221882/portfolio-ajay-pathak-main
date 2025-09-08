@@ -107,7 +107,7 @@ export default function HeroSelector() {
         <div className="enter-text-container">
           <h2 className="enter-world-text">Enter World</h2>
         </div>
-        <div className="flex items-center justify-center h-full w-full">
+        <div className="flex items-center justify-center h-full w-full model-container">
           <EnterScreen />
         </div>
       </div>
