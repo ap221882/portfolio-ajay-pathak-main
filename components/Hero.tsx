@@ -112,10 +112,7 @@ export default function HeroSelector() {
             <span className="inline-block">
               <CornerDownRight />
             </span>
-            <p>
-              Enter World
-              <span className="absolute inset-0 -z-10 bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-indigo-500/30 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
-            </p>
+            <p>Enter World</p>
             {/* BG effect */}
           </h2>
         </div>
