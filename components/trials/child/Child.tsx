@@ -14,13 +14,20 @@ import {
 
 import Model from './Model';
 
-const Child = () => {
+const Child = ({ enterClicked }: { enterClicked: boolean }) => {
   const { camera } = useThree();
   const ref = useRef<Mesh>(null);
 
   useFrame((_, delta) => {
     if (ref.current) {
-      ref.current.rotation.y = ref.current.rotation.y + delta;
+      if (!enterClicked) {
+        ref.current.rotation.y = ref.current.rotation.y + delta;
+      } else {
+        const targetRotation = 0;
+        const smoothFactor = 0.1;
+        ref.current.rotation.y +=
+          (targetRotation - ref.current.rotation.y) * smoothFactor;
+      }
     }
   });
 

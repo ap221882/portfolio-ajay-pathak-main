@@ -39,6 +39,7 @@ const ROLES = [
 
 export default function HeroSelector() {
   const shouldReduceMotion = useReducedMotion();
+  const [enterClicked, setEnterClicked] = useState(false);
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
 
@@ -107,7 +108,12 @@ export default function HeroSelector() {
       </header>
       <CustomCursor />
       <div className="relative w-full">
-        <div className="enter-text-container">
+        <div
+          className="enter-text-container"
+          onClick={() => {
+            setEnterClicked(true);
+          }}
+        >
           <h2 className="enter-world-text relative group overflow-hidden text-white hover:scale-105 transition-transform">
             <span className="inline-block">
               <CornerDownRight />
@@ -117,7 +123,7 @@ export default function HeroSelector() {
           </h2>
         </div>
         <div className="flex items-center justify-center h-full w-full model-container">
-          <EnterScreen />
+          <EnterScreen enterClicked={enterClicked} />
         </div>
       </div>
     </motion.div>
