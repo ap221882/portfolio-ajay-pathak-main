@@ -42,6 +42,7 @@ export default function HeroSelector() {
   const [enterClicked, setEnterClicked] = useState(false);
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // ensure first chip is keyboard-focusable on mount
   useEffect(() => {
@@ -87,9 +88,20 @@ export default function HeroSelector() {
     ? {}
     : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 } };
 
+  const handleEnterClick = () => {
+    setEnterClicked(true);
+    setTimeout(() => {
+      setIsTransitioning(true);
+    }, 800); // Longer delay before transition
+  };
+
   return (
-    <motion.div className="grid flex-1 h-full heroContainer cursor-none bg-black">
-      <header className="flex border-b">
+    <motion.div className="fixed inset-0 w-full h-screen bg-black">
+      <header
+        className={`relative z-10 border-b transition-opacity duration-500 ${
+          enterClicked ? "opacity-0" : "opacity-100"
+        }`}
+      >
         <div className="w-full text-center m-auto">
           <div className="mb-6 mx-6 pt-4">
             <div className="flex justify-between">
@@ -107,13 +119,8 @@ export default function HeroSelector() {
         </div>
       </header>
       <CustomCursor />
-      <div className="relative w-full">
-        <div
-          className="enter-text-container"
-          onClick={() => {
-            setEnterClicked(true);
-          }}
-        >
+      <div className="absolute inset-0 top-[80px]">
+        <div className="enter-text-container" onClick={handleEnterClick}>
           <h2
             className={`relative group overflow-hidden text-white hover:scale-105 transition-transform ${enterClicked ? "hidden" : "enter-world-text"}`}
           >
@@ -124,9 +131,13 @@ export default function HeroSelector() {
           </h2>
         </div>
         <div
-          className={`flex items-center justify-center h-full w-full ${enterClicked ? "model-container-not-blurred" : "model-container"}`}
+          className={`absolute inset-0 flex items-center justify-center
+          ${enterClicked ? "model-container-not-blurred" : "model-container"}`}
         >
-          <EnterScreen enterClicked={enterClicked} />
+          <EnterScreen
+            enterClicked={enterClicked}
+            isTransitioning={isTransitioning}
+          />
         </div>
       </div>
     </motion.div>

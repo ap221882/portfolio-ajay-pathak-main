@@ -8,27 +8,38 @@ import {
   useThree,
 } from '@react-three/fiber';
 
-function CameraController({ target }: any) {
+interface CameraControllerProps {
+  target: THREE.Object3D | null;
+  isTransitioning: boolean;
+}
+
+function CameraController({ target, isTransitioning }: CameraControllerProps) {
   const { camera } = useThree();
   const controlsRef = useRef<any>(null);
+  const hasTransitioned = useRef(false);
 
   useFrame(() => {
-    if (target) {
-      const targetPos = target.getWorldPosition(new THREE.Vector3());
+    if (isTransitioning && !hasTransitioned.current) {
+      const targetPos = new THREE.Vector3(1.5, 1, 2.5); // Adjusted for diagonal view
+      camera.position.lerp(targetPos, 0.01);
+      camera.lookAt(0, 0, 0);
 
-      // Smooth position lerp
-      camera.position.lerp(
-        targetPos.clone().add(new THREE.Vector3(2, 2, 0.9)), // offset in Z for zoom
-        0.1
-      );
-
-      camera.lookAt(targetPos);
-
-      controlsRef.current?.update();
+      if (camera.position.distanceTo(targetPos) < 0.1) {
+        hasTransitioned.current = true;
+      }
     }
   });
 
-  return <OrbitControls ref={controlsRef} />;
+  return (
+    <OrbitControls
+      ref={controlsRef}
+      enableZoom={false}
+      enablePan={false}
+      enableRotate={!isTransitioning}
+      minDistance={2}
+      maxDistance={10}
+    />
+  );
 }
 
 export default CameraController;

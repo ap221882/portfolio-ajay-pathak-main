@@ -2,11 +2,12 @@
 
 import {
   Suspense,
+  useEffect,
   useRef,
   useState,
 } from 'react';
 
-import { Mesh } from 'three';
+import * as THREE from 'three';
 
 import {
   useFrame,
@@ -16,38 +17,43 @@ import {
 import CameraController from './CameraController';
 import Model from './Model';
 
-const Child = ({ enterClicked }: { enterClicked: boolean }) => {
+interface ChildProps {
+  enterClicked: boolean;
+  isTransitioning: boolean;
+}
+
+const Child = ({ enterClicked, isTransitioning }: ChildProps) => {
   const { camera } = useThree();
-  const [target, setTarget] = useState(null);
-  const ref = useRef<Mesh>(null);
+  const [target, setTarget] = useState<THREE.Object3D | null>(null);
+  const ref = useRef<THREE.Mesh>(null);
+
+  // Set initial camera position
+  useEffect(() => {
+    camera.position.set(2, 1.5, 3.5); // Closer initial position
+    camera.lookAt(0, 0, 0);
+  }, [camera]);
 
   useFrame((_, delta) => {
-    if (ref.current) {
-      if (!enterClicked) {
-        ref.current.rotation.y = ref.current.rotation.y + delta;
-      } else {
-        const targetRotation = 0;
-        const smoothFactor = 0.1;
-        ref.current.rotation.y +=
-          (targetRotation - ref.current.rotation.y) * smoothFactor;
-      }
+    if (ref.current && !enterClicked) {
+      ref.current.rotation.y += delta * 0.5; // Slower rotation
+    } else if (ref.current && enterClicked) {
+      ref.current.rotation.y = THREE.MathUtils.lerp(
+        ref.current.rotation.y,
+        0,
+        0.05
+      );
     }
-  });
-
-  useFrame(() => {
-    camera.lookAt(0, 0, 0);
   });
 
   return (
     <mesh ref={ref}>
-      <ambientLight intensity={0.25} />
-      <directionalLight position={[0, 0, 0]} />
-      <CameraController target={target} />
-      {/* <ScrollControls pages={3} damping={0.2}> */}
+      <ambientLight intensity={0.5} /> {/* Increased light intensity */}
+      <directionalLight position={[5, 5, 5]} intensity={0.5} />{" "}
+      {/* Adjusted light */}
+      <CameraController target={target} isTransitioning={isTransitioning} />
       <Suspense fallback={null}>
-        <Model setTarget={setTarget} />
+        <Model setTarget={setTarget} isTransitioning={isTransitioning} />
       </Suspense>
-      {/* </ScrollControls> */}
     </mesh>
   );
 };

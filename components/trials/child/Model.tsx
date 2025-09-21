@@ -5,45 +5,45 @@ import {
 
 import * as THREE from 'three';
 
+import { useGLTF } from '@react-three/drei';
 import {
-  useGLTF,
-  useScroll,
-} from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+  ThreeEvent,
+  useFrame,
+} from '@react-three/fiber';
 
-const Model = ({ setTarget }: any) => {
+interface ModelProps {
+  setTarget: (target: THREE.Object3D | null) => void;
+  isTransitioning: boolean;
+}
+
+const Model = ({ setTarget, isTransitioning }: ModelProps) => {
   const model = useGLTF("./space_boi.glb");
   const modelRef = useRef<THREE.Group>(null);
-  const scroll = useScroll();
+  const initialScale = 0.25; // Increased from 0.2
+  const hasScaled = useRef(false);
 
-  // Attach click handlers directly to children meshes
-  const attachClickHandlers = (obj: THREE.Object3D) => {
-    obj.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        child.userData.clickable = true; // optional
+  useFrame(() => {
+    if (modelRef.current && isTransitioning && !hasScaled.current) {
+      const targetScale = 0.3;
+      modelRef.current.scale.lerp(
+        new THREE.Vector3(targetScale, targetScale, targetScale),
+        0.02
+      );
+
+      if (modelRef.current.scale.x > 0.29) {
+        hasScaled.current = true;
       }
-    });
-  };
-
-  attachClickHandlers(model.scene);
-
-  useFrame((state, delta) => {
-    if (modelRef.current) {
-      // Example rotation based on scroll
-      // const rotation = scroll.offset * Math.PI * 2;
-      // modelRef.current.rotation.y = rotation;
     }
   });
 
   return (
     <group
       ref={modelRef}
-      scale={0.2}
-      onClick={(e) => {
-        // Intersected object from ray
-        const object = e.object;
-        console.log("Clicked object:", object);
-        setTarget(object);
+      scale={initialScale}
+      onClick={(e: ThreeEvent<MouseEvent>) => {
+        if (!isTransitioning) {
+          setTarget(e.object);
+        }
       }}
     >
       <primitive object={model.scene} />
