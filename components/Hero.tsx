@@ -1,20 +1,14 @@
 "use client";
 
-import './hero.css';
+import "./hero.css";
 
-import React, {
-  useEffect,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from "react";
 
-import {
-  motion,
-  useReducedMotion,
-} from 'framer-motion';
-import { CornerDownRight } from 'lucide-react';
+import { motion, useReducedMotion } from "framer-motion";
+import { CornerDownRight } from "lucide-react";
 
-import CustomCursor from './customCursor/CustomCursor';
-import EnterScreen from './trials/EnterScreen';
+import CustomCursor from "./customCursor/CustomCursor";
+import EnterScreen from "./trials/EnterScreen";
 
 const ROLES = [
   {
@@ -41,12 +35,6 @@ export default function HeroSelector() {
   const shouldReduceMotion = useReducedMotion();
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
-
-  // ensure first chip is keyboard-focusable on mount
-  useEffect(() => {
-    const el = document.querySelector<HTMLElement>('[data-role="role-0"]');
-    if (el) el.setAttribute("tabindex", "0");
-  }, []);
 
   useEffect(() => {
     const updateDateTime = () => {
