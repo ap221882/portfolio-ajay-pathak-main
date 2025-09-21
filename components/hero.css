@@ -59,7 +59,7 @@
 }
 
 .model-container{
-  filter: blur(3px); /* Reduced from 10px */
+  filter: blur(1.5px); /* Reduced from 3px */
   transition: filter 0.3s ease-out;
   opacity: 0.9;
 }

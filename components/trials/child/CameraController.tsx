@@ -35,7 +35,7 @@ function CameraController({ target, isTransitioning }: CameraControllerProps) {
       ref={controlsRef}
       enableZoom={false}
       enablePan={false}
-      enableRotate={!isTransitioning}
+      enableRotate={false}
       minDistance={2}
       maxDistance={10}
     />
