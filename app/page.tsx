@@ -1,11 +1,15 @@
 "use client";
 
-import MinimalSelectorHero from "@/components/Hero";
+import Hero from '@/components/Hero';
+import RolesSection from '@/components/RolesSection';
 
 const Main = () => {
   return (
     <>
-      <MinimalSelectorHero />
+      <Hero />
+      <section id="roles" className="h-screen overflow-hidden mt-36">
+        <RolesSection />
+      </section>
     </>
   );
 };

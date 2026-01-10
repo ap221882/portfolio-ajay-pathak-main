@@ -1,14 +1,20 @@
 "use client";
 
-import "./hero.css";
+import './hero.css';
 
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from 'react';
 
-import { motion, useReducedMotion } from "framer-motion";
-import { CornerDownRight } from "lucide-react";
+import {
+  motion,
+  useReducedMotion,
+} from 'framer-motion';
+import { CornerDownRight } from 'lucide-react';
 
-import CustomCursor from "./customCursor/CustomCursor";
-import EnterScreen from "./trials/EnterScreen";
+import CustomCursor from './customCursor/CustomCursor';
+import EnterScreen from './trials/EnterScreen';
 
 const ROLES = [
   {
@@ -35,6 +41,13 @@ export default function HeroSelector() {
   const shouldReduceMotion = useReducedMotion();
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
+
+  const handleScroll = () => {
+    const el = document.getElementById("roles");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -75,39 +88,46 @@ export default function HeroSelector() {
     : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 } };
 
   return (
-    <motion.div className="grid flex-1 h-full heroContainer cursor-none bg-black">
-      <header className="flex border-b">
-        <div className="w-full text-center m-auto">
-          <div className="mb-6 mx-6 pt-4">
-            <div className="flex justify-between">
-              <p className="text-sm uppercase tracking-widest">{date}</p>
-              <p className="text-sm uppercase tracking-widest">{time}</p>
-              <p className="text-sm uppercase tracking-widest">Ajay Pathak</p>
+    <>
+      <motion.div className="grid h-screen heroContainer cursor-none bg-black">
+        <header className="flex border-b">
+          <div className="w-full text-center m-auto">
+            <div className="mb-6 mx-6 pt-4">
+              <div className="flex justify-between">
+                <p className="text-sm uppercase tracking-widest">{date}</p>
+                <p className="text-sm uppercase tracking-widest">{time}</p>
+                <p className="text-sm uppercase tracking-widest">Ajay Pathak</p>
+              </div>
             </div>
+            <motion.h1
+              {...headlineVariants}
+              className="text-4xl sm:text-3xl md:text-6xl lg:text-5xl font-medium leading-tight pb-4"
+            >
+              One man, different personalities
+            </motion.h1>
           </div>
-          <motion.h1
-            {...headlineVariants}
-            className="text-4xl sm:text-3xl md:text-6xl lg:text-5xl font-medium leading-tight pb-4"
-          >
-            One man, different personalities
-          </motion.h1>
+        </header>
+        <CustomCursor />
+        <div className="relative w-full">
+          <div className="enter-text-container">
+            <button
+              type="button"
+              onClick={handleScroll}
+              className="enter-world-text relative group overflow-hidden text-white hover:scale-105 transition-transform cursor-pointer"
+              aria-label="Scroll to roles"
+            >
+              <span className="inline-block">
+                <CornerDownRight />
+              </span>
+              <p>What's my Career</p>
+              {/* BG effect */}
+            </button>
+          </div>
+          <div className="flex items-center justify-center h-full w-full model-container">
+            <EnterScreen />
+          </div>
         </div>
-      </header>
-      <CustomCursor />
-      <div className="relative w-full">
-        <div className="enter-text-container">
-          <h2 className="enter-world-text relative group overflow-hidden text-white hover:scale-105 transition-transform">
-            <span className="inline-block">
-              <CornerDownRight />
-            </span>
-            <p>Enter World</p>
-            {/* BG effect */}
-          </h2>
-        </div>
-        <div className="flex items-center justify-center h-full w-full model-container">
-          <EnterScreen />
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </>
   );
 }

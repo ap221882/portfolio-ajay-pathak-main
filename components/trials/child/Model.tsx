@@ -7,7 +7,7 @@ const Model = () => {
 
   return (
     <>
-      <primitive object={model.scene} scale={0.2} />
+      <primitive object={model.scene} scale={0.25} />
     </>
   );
 };
