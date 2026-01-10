@@ -11,13 +11,13 @@ const ROLES = [
     href: "/engineer",
     accent: "from-sky-500 to-indigo-600",
   },
-  {
-    id: "creator",
-    title: "Creator",
-    subtitle: "Audio stories & short reels.",
-    href: "/creator",
-    accent: "from-emerald-400 to-teal-500",
-  },
+  // {
+  //   id: "creator",
+  //   title: "Creator",
+  //   subtitle: "Audio stories & short reels.",
+  //   href: "/creator",
+  //   accent: "from-emerald-400 to-teal-500",
+  // },
   {
     id: "writer",
     title: "Writer",
@@ -43,7 +43,7 @@ export default function RolesSection() {
         </p>
       </header>
 
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex justify-around">
         {ROLES.map((role, i) => (
           // <Link key={role.id} href={role.href} className="group">
           <motion.div
