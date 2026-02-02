@@ -1,20 +1,14 @@
 "use client";
 
-import './hero.css';
+import "./hero.css";
 
-import React, {
-  useEffect,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from "react";
 
-import {
-  motion,
-  useReducedMotion,
-} from 'framer-motion';
-import { CornerDownRight } from 'lucide-react';
+import { motion, useReducedMotion } from "framer-motion";
+import { CornerDownRight } from "lucide-react";
 
-import CustomCursor from './customCursor/CustomCursor';
-import EnterScreen from './trials/EnterScreen';
+import CustomCursor from "./customCursor/CustomCursor";
+import EnterScreen from "./trials/EnterScreen";
 
 const ROLES = [
   {
@@ -119,8 +113,7 @@ export default function HeroSelector() {
               <span className="inline-block">
                 <CornerDownRight />
               </span>
-              <p>What's my Career</p>
-              {/* BG effect */}
+              <p>What's my Life look like</p>
             </button>
           </div>
           <div className="flex items-center justify-center h-full w-full model-container">
