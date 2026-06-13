@@ -25,8 +25,8 @@ const T: Record<ThemeMode, Theme> = {
     surface: "#FAFAFA",
     surfaceHov: "#F2F2F2",
     ink: "#000000",
-    inkMid: "#666666",
-    inkFaint: "#999999",
+    inkMid: "#4B5563",
+    inkFaint: "#5F6368",
     accent: "#0070F3",
     accentDim: "#E6F1FE",
     accentText: "#0058CC",
@@ -205,10 +205,11 @@ const GLOBAL_CSS = `
   .dark  .ap3-pill:hover{background:#0C2D52;border-color:#3291FF;color:#52A8FF}
 
   /* craft card left-border reveal */
-  .ap3-craft-card{position:relative;overflow:hidden}
+  .ap3-craft-card{position:relative;overflow:hidden;transition:transform 0.25s cubic-bezier(0.16,1,0.3,1),background 0.2s ease}
   .ap3-craft-card::before{content:"";position:absolute;inset:0;border-left:2px solid transparent;transition:border-color 0.25s ease;pointer-events:none}
-  .light .ap3-craft-card:hover::before{border-color:#0070F3}
-  .dark  .ap3-craft-card:hover::before{border-color:#3291FF}
+  .ap3-craft-card:hover,.ap3-craft-card:focus-visible{transform:translateY(-2px)}
+  .light .ap3-craft-card:hover::before,.light .ap3-craft-card:focus-visible::before{border-color:#0070F3}
+  .dark  .ap3-craft-card:hover::before,.dark  .ap3-craft-card:focus-visible::before{border-color:#3291FF}
 
   /* work row bottom accent sweep */
   .ap3-work-row{position:relative}
@@ -227,9 +228,10 @@ const GLOBAL_CSS = `
   .dark  .ap3-toggle-on{background:#3291FF !important;border-color:#3291FF !important}
 
   /* timeline row hover bg */
-  .ap3-tl-row{transition:background 0.2s ease;border-radius:6px;margin:0 -12px;padding-left:12px;padding-right:12px}
+  .ap3-tl-row{position:relative;transition:background 0.2s ease,transform 0.25s cubic-bezier(0.16,1,0.3,1);border-radius:6px;margin:0 -12px;padding-left:12px;padding-right:12px}
   .light .ap3-tl-row:hover{background:#F5F5F5}
   .dark  .ap3-tl-row:hover{background:#0A0A0A}
+  .ap3-tl-row:hover{transform:translateX(4px)}
 
   /* tag spring-pop */
   .ap3-tag-pop{transform:scale(0.85);opacity:0;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease;display:inline-block}
@@ -237,7 +239,7 @@ const GLOBAL_CSS = `
 
   /* ripple inside buttons */
   .ap3-ripple-host{position:relative;overflow:hidden}
-  .ap3-ripple-el{position:absolute;border-radius:50%;width:60px;height:60px;margin:-30px 0 0 -30px;background:rgba(255,255,255,0.25);animation:ap3-ripple 0.55s linear;pointer-events:none}
+  .ap3-ripple-el{position:absolute;border-radius:50%;width:60px;height:60px;margin:-30px 0 0 -30px;background:currentColor;animation:ap3-ripple 0.55s linear;pointer-events:none}
 
   /* "AP" logo magnetic spacing */
   .ap3-logo{transition:letter-spacing 0.3s cubic-bezier(0.34,1.56,0.64,1);cursor:default}
@@ -248,7 +250,9 @@ const GLOBAL_CSS = `
   .ap3-dot-wrap:hover .ap3-dot{animation:ap3-dot-pulse 0.6s ease infinite}
 
   /* terminal scanline */
-  .ap3-scanline{position:absolute;left:0;right:0;height:20px;pointer-events:none;opacity:0.04;background:linear-gradient(transparent,rgba(255,255,255,0.8),transparent);animation:ap3-scanline 4s linear infinite}
+  .ap3-scanline{position:absolute;left:0;right:0;height:20px;pointer-events:none;opacity:0.04;animation:ap3-scanline 4s linear infinite}
+  .light .ap3-scanline{background:linear-gradient(transparent,rgba(0,0,0,0.5),transparent)}
+  .dark  .ap3-scanline{background:linear-gradient(transparent,rgba(255,255,255,0.8),transparent)}
 
   /* section label underline */
   .ap3-sec-label{position:relative;display:inline-block}
@@ -860,6 +864,8 @@ function WorkRow({
         aria-controls={panelId}
         onClick={toggleOpen}
         onKeyDown={handleKeyDown}
+        onFocus={() => setHov(true)}
+        onBlur={() => setHov(false)}
         onMouseEnter={() => setHov(true)}
         onMouseLeave={() => setHov(false)}
         style={{
@@ -1032,13 +1038,39 @@ function SelectedWork({ t, mob }: { t: Theme; mob: boolean }) {
 }
 
 /* ─── Craft card ─────────────────────────────────────────────────────────── */
-function CraftCard({ c, t }: { c: CraftItem; t: Theme }) {
+function CraftCard({ c, t, tab }: { c: CraftItem; t: Theme; tab: boolean }) {
   const [hov, setHov] = useState(false);
+  const panelId = "craft-detail-" + c.name.toLowerCase().replace(/\W+/g, "-");
+  const prompt = tab ? "Tap for details" : "Hover for details";
+
+  const toggleOpen = () => {
+    if (tab) {
+      setHov((open) => !open);
+      return;
+    }
+    setHov(true);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setHov((open) => !open);
+    }
+  };
+
   return (
     <div
       className="ap3-craft-card"
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
+      role="button"
+      tabIndex={0}
+      aria-expanded={hov}
+      aria-controls={panelId}
+      onClick={toggleOpen}
+      onKeyDown={handleKeyDown}
+      onFocus={() => !tab && setHov(true)}
+      onBlur={() => setHov(false)}
+      onMouseEnter={() => !tab && setHov(true)}
+      onMouseLeave={() => !tab && setHov(false)}
       style={{ background: t.bg, padding: "30px 26px", minHeight: "118px" }}
     >
       <i
@@ -1064,6 +1096,7 @@ function CraftCard({ c, t }: { c: CraftItem; t: Theme }) {
         {c.name}
       </p>
       <p
+        id={panelId}
         style={{
           ...sans,
           fontWeight: 400,
@@ -1088,7 +1121,7 @@ function CraftCard({ c, t }: { c: CraftItem; t: Theme }) {
             letterSpacing: "0.08em",
           }}
         >
-          hover for detail
+          {prompt}
         </p>
       )}
     </div>
@@ -1096,7 +1129,7 @@ function CraftCard({ c, t }: { c: CraftItem; t: Theme }) {
 }
 
 /* ─── Craft ──────────────────────────────────────────────────────────────── */
-function Craft({ t, mob }: { t: Theme; mob: boolean }) {
+function Craft({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
   const [ref, visible] = useReveal();
   return (
     <section
@@ -1132,7 +1165,7 @@ function Craft({ t, mob }: { t: Theme; mob: boolean }) {
         }}
       >
         {CRAFT.map((c) => (
-          <CraftCard key={c.name} c={c} t={t} />
+          <CraftCard key={c.name} c={c} t={t} tab={tab} />
         ))}
       </div>
     </section>
@@ -1466,7 +1499,7 @@ function Footer({ t, mob }: { t: Theme; mob: boolean }) {
           { label: "email", href: "mailto:ajay.pathak.webdeveloper@gmail.com" },
           {
             label: "linkedin",
-            href: "https://linkedin.com/in/ajay-pathakdeveloper",
+            href: "https://linkedin.com/in/ajay-pathak-developer",
           },
           { label: "website", href: "https://ajay-pathak.com" },
         ].map(({ label, href }) => (
@@ -1498,16 +1531,8 @@ function Footer({ t, mob }: { t: Theme; mob: boolean }) {
 
 /* ─── Root ───────────────────────────────────────────────────────────────── */
 export default function AjayPortfolio() {
-  const [mode, setMode] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") return "dark";
-    try {
-      return window.localStorage.getItem("theme") === "light"
-        ? "light"
-        : "dark";
-    } catch {
-      return "dark";
-    }
-  });
+  const [mounted, setMounted] = useState(false);
+  const [mode, setMode] = useState<ThemeMode>("dark");
   const t = T[mode];
   const { mob, tab } = useBreakpoint();
   const progress = useScrollProgress();
@@ -1516,11 +1541,25 @@ export default function AjayPortfolio() {
 
   useEffect(() => {
     try {
+      const stored = window.localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") {
+        setMode(stored);
+      }
+    } catch {
+      // Ignore storage failures in private or restricted browser contexts.
+    } finally {
+      setMounted(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    try {
       window.localStorage.setItem("theme", mode);
     } catch {
       // Ignore storage failures in private or restricted browser contexts.
     }
-  }, [mode]);
+  }, [mode, mounted]);
 
   return (
     <div
@@ -1529,25 +1568,27 @@ export default function AjayPortfolio() {
         background: t.bg,
         color: t.ink,
         minHeight: "100vh",
-        transition: "background 0.35s, color 0.35s",
+        transition: mounted ? "background 0.35s, color 0.35s" : "none",
       }}
     >
-      <ProgressBar progress={progress} t={t} />
-      <Nav
-        mode={mode}
-        onToggle={() => setMode((m) => (m === "dark" ? "light" : "dark"))}
-        t={t}
-        mob={mob}
-      />
-      <main>
-        <Hero t={t} mob={mob} tab={tab} />
-        <SelectedWork t={t} mob={mob} />
-        <Craft t={t} mob={mob} />
-        <Timeline t={t} mob={mob} />
-        <Terminal t={t} mob={mob} />
-      </main>
-      <Footer t={t} mob={mob} />
-      <Toast msg={toastMsg} mode={mode} />
+      <div style={{ visibility: mounted ? "visible" : "hidden" }}>
+        <ProgressBar progress={progress} t={t} />
+        <Nav
+          mode={mode}
+          onToggle={() => setMode((m) => (m === "dark" ? "light" : "dark"))}
+          t={t}
+          mob={mob}
+        />
+        <main>
+          <Hero t={t} mob={mob} tab={tab} />
+          <SelectedWork t={t} mob={mob} />
+          <Craft t={t} mob={mob} tab={tab} />
+          <Timeline t={t} mob={mob} />
+          <Terminal t={t} mob={mob} />
+        </main>
+        <Footer t={t} mob={mob} />
+        <Toast msg={toastMsg} mode={mode} />
+      </div>
     </div>
   );
 }
