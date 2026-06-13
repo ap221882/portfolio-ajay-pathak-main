@@ -1,7 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 
 /* ─── Theme ──────────────────────────────────────────────────────────────── */
-const T = {
+type ThemeMode = "light" | "dark";
+
+interface Theme {
+  bg: string;
+  surface: string;
+  surfaceHov: string;
+  ink: string;
+  inkMid: string;
+  inkFaint: string;
+  accent: string;
+  accentDim: string;
+  accentText: string;
+  border: string;
+  borderMid: string;
+  toggleKnob: string;
+  toggleBg: string;
+}
+
+const T: Record<ThemeMode, Theme> = {
   light: {
     bg: "#FFFFFF",
     surface: "#FAFAFA",
@@ -35,7 +53,15 @@ const T = {
 };
 
 /* ─── Content ────────────────────────────────────────────────────────────── */
-const WORKS = [
+interface WorkItem {
+  title: string;
+  sub: string;
+  period: string;
+  detail: string;
+  tags: string[];
+}
+
+const WORKS: WorkItem[] = [
   {
     title: "Astra Wealth",
     sub: "Groww · B2B wealth platform",
@@ -70,7 +96,13 @@ const WORKS = [
   },
 ];
 
-const CRAFT = [
+interface CraftItem {
+  icon: string;
+  name: string;
+  desc: string;
+}
+
+const CRAFT: CraftItem[] = [
   {
     icon: "ti-layout-2",
     name: "Component systems",
@@ -103,7 +135,14 @@ const CRAFT = [
   },
 ];
 
-const TIMELINE = [
+interface TimelineItem {
+  period: string;
+  co: string;
+  role: string;
+  note: string;
+}
+
+const TIMELINE: TimelineItem[] = [
   {
     period: "2024 — present",
     co: "Groww",
@@ -131,8 +170,8 @@ const TIMELINE = [
 ];
 
 /* ─── Hooks ──────────────────────────────────────────────────────────────── */
-function useBreakpoint() {
-  const [w, setW] = useState(
+function useBreakpoint(): { mob: boolean; tab: boolean } {
+  const [w, setW] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 1200,
   );
   useEffect(() => {
@@ -143,8 +182,8 @@ function useBreakpoint() {
   return { mob: w < 600, tab: w < 920 };
 }
 
-function useScrollProgress() {
-  const [p, setP] = useState(0);
+function useScrollProgress(): number {
+  const [p, setP] = useState<number>(0);
   useEffect(() => {
     const h = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -157,9 +196,9 @@ function useScrollProgress() {
   return p;
 }
 
-function useReveal() {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
+function useReveal(): [React.RefObject<HTMLDivElement>, boolean] {
+  const ref = useRef<any>(null);
+  const [visible, setVisible] = useState<boolean>(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -178,7 +217,7 @@ function useReveal() {
   return [ref, visible];
 }
 
-function useGlobals() {
+function useGlobals(): void {
   useEffect(() => {
     if (document.getElementById("ap3-g")) return;
     const l1 = document.createElement("link");
@@ -222,8 +261,8 @@ function useGlobals() {
 }
 
 /* ─── Live clock (Asia/Kolkata) ─────────────────────────────────────────── */
-function useClock() {
-  const [time, setTime] = useState("");
+function useClock(): string {
+  const [time, setTime] = useState<string>("");
   useEffect(() => {
     const tick = () => {
       const fmt = new Intl.DateTimeFormat("en-GB", {
@@ -243,10 +282,16 @@ function useClock() {
 }
 
 /* ─── Tiny helpers ───────────────────────────────────────────────────────── */
-const mono = { fontFamily: "'IBM Plex Mono', monospace" };
-const sans = { fontFamily: "'Inter', sans-serif" };
+const mono: CSSProperties = { fontFamily: "'IBM Plex Mono', monospace" };
+const sans: CSSProperties = { fontFamily: "'Inter', sans-serif" };
 
-function Label({ children, t, style: extra = {} }) {
+interface LabelProps {
+  children: React.ReactNode;
+  t: Theme;
+  style?: CSSProperties;
+}
+
+function Label({ children, t, style: extra = {} }: LabelProps) {
   return (
     <span
       style={{
@@ -263,7 +308,12 @@ function Label({ children, t, style: extra = {} }) {
   );
 }
 
-function Pill({ children, t }) {
+interface PillProps {
+  children: React.ReactNode;
+  t: Theme;
+}
+
+function Pill({ children, t }: PillProps) {
   return (
     <span
       style={{
@@ -284,7 +334,12 @@ function Pill({ children, t }) {
 }
 
 /* ─── Scroll progress bar ────────────────────────────────────────────────── */
-function ProgressBar({ progress, t }) {
+interface ProgressBarProps {
+  progress: number;
+  t: Theme;
+}
+
+function ProgressBar({ progress, t }: ProgressBarProps) {
   return (
     <div
       style={{
@@ -310,7 +365,13 @@ function ProgressBar({ progress, t }) {
 }
 
 /* ─── Toggle ─────────────────────────────────────────────────────────────── */
-function Toggle({ mode, onToggle, t }) {
+interface ToggleProps {
+  mode: ThemeMode;
+  onToggle: () => void;
+  t: Theme;
+}
+
+function Toggle({ mode, onToggle, t }: ToggleProps) {
   const dark = mode === "dark";
   return (
     <button
@@ -354,7 +415,14 @@ function Toggle({ mode, onToggle, t }) {
 }
 
 /* ─── Nav ────────────────────────────────────────────────────────────────── */
-function Nav({ mode, onToggle, t, mob }) {
+interface NavProps {
+  mode: ThemeMode;
+  onToggle: () => void;
+  t: Theme;
+  mob: boolean;
+}
+
+function Nav({ mode, onToggle, t, mob }: NavProps) {
   return (
     <nav
       style={{
@@ -405,11 +473,23 @@ function Nav({ mode, onToggle, t, mob }) {
 }
 
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
-function Hero({ t, mob, tab }) {
-  const ref = useRef(null);
-  const [glow, setGlow] = useState({ x: 50, y: 50, active: false });
+interface HeroProps {
+  t: Theme;
+  mob: boolean;
+  tab: boolean;
+}
 
-  const onMove = (e) => {
+interface GlowState {
+  x: number;
+  y: number;
+  active: boolean;
+}
+
+function Hero({ t, mob, tab }: HeroProps) {
+  const ref = useRef<HTMLElement>(null);
+  const [glow, setGlow] = useState<GlowState>({ x: 50, y: 50, active: false });
+
+  const onMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!ref.current) return;
     const r = ref.current.getBoundingClientRect();
     setGlow({
@@ -583,9 +663,16 @@ function Hero({ t, mob, tab }) {
 }
 
 /* ─── Work ───────────────────────────────────────────────────────────────── */
-function WorkRow({ item, t, mob, last }) {
-  const [open, setOpen] = useState(false);
-  const [hov, setHov] = useState(false);
+interface WorkRowProps {
+  item: WorkItem;
+  t: Theme;
+  mob: boolean;
+  last: boolean;
+}
+
+function WorkRow({ item, t, mob, last }: WorkRowProps) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [hov, setHov] = useState<boolean>(false);
 
   return (
     <div style={{ borderBottom: last ? "none" : "1px solid " + t.border }}>
@@ -709,8 +796,13 @@ function WorkRow({ item, t, mob, last }) {
 }
 
 /* ─── Craft ──────────────────────────────────────────────────────────────── */
-function CraftCard({ c, t }) {
-  const [hov, setHov] = useState(false);
+interface CraftCardProps {
+  c: CraftItem;
+  t: Theme;
+}
+
+function CraftCard({ c, t }: CraftCardProps) {
+  const [hov, setHov] = useState<boolean>(false);
   return (
     <div
       onMouseEnter={() => setHov(true)}
@@ -776,7 +868,12 @@ function CraftCard({ c, t }) {
   );
 }
 
-function Craft({ t, mob }) {
+interface CraftProps {
+  t: Theme;
+  mob: boolean;
+}
+
+function Craft({ t, mob }: CraftProps) {
   const [ref, visible] = useReveal();
   return (
     <section
@@ -818,7 +915,12 @@ function Craft({ t, mob }) {
 }
 
 /* ─── Timeline ───────────────────────────────────────────────────────────── */
-function Timeline({ t, mob }) {
+interface TimelineProps {
+  t: Theme;
+  mob: boolean;
+}
+
+function Timeline({ t, mob }: TimelineProps) {
   const [ref, visible] = useReveal();
   return (
     <section
@@ -924,10 +1026,21 @@ function Timeline({ t, mob }) {
 }
 
 /* ─── Terminal ───────────────────────────────────────────────────────────── */
-function Terminal({ t, mob }) {
+interface TerminalProps {
+  t: Theme;
+  mob: boolean;
+}
+
+interface TerminalLine {
+  prompt: boolean;
+  text: string;
+  val?: boolean;
+}
+
+function Terminal({ t, mob }: TerminalProps) {
   const clock = useClock();
 
-  const lines = [
+  const lines: TerminalLine[] = [
     { prompt: true, text: "cat about.json" },
     { prompt: false, text: "{" },
     { prompt: false, text: '  "name": "Ajay Pathak",', val: true },
@@ -1075,7 +1188,12 @@ function Terminal({ t, mob }) {
 }
 
 /* ─── Footer ─────────────────────────────────────────────────────────────── */
-function Footer({ t, mob }) {
+interface FooterProps {
+  t: Theme;
+  mob: boolean;
+}
+
+function Footer({ t, mob }: FooterProps) {
   return (
     <footer
       style={{
@@ -1132,7 +1250,12 @@ function Footer({ t, mob }) {
 }
 
 /* ─── Selected work ──────────────────────────────────────────────────────── */
-function SelectedWork({ t, mob }) {
+interface SelectedWorkProps {
+  t: Theme;
+  mob: boolean;
+}
+
+function SelectedWork({ t, mob }: SelectedWorkProps) {
   const [ref, visible] = useReveal();
   return (
     <section
@@ -1176,7 +1299,7 @@ function SelectedWork({ t, mob }) {
 
 /* ─── Root ───────────────────────────────────────────────────────────────── */
 export default function AjayPortfolio() {
-  const [mode, setMode] = useState("dark");
+  const [mode, setMode] = useState<ThemeMode>("dark");
   const t = T[mode];
   const { mob, tab } = useBreakpoint();
   const progress = useScrollProgress();
