@@ -4,13 +4,12 @@ import {
 } from 'react';
 
 function useBreakpoint() {
-  const [w, setW] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 1200,
-  );
+  const [w, setW] = useState(1200);
   useEffect(() => {
-    const h = () => setW(window.innerWidth);
-    window.addEventListener("resize", h);
-    return () => window.removeEventListener("resize", h);
+    const update = () => setW(window.innerWidth);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
   return { mob: w < 600, tab: w < 920 };
 }
