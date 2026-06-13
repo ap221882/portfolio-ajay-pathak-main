@@ -1,0 +1,54 @@
+{
+  "name": "Ajay Pathak - Frontend Engineer Portfolio",
+  "short_name": "Ajay Pathak",
+  "description": "Frontend engineer building high-performance React and Next.js applications, microfrontend systems, and developer-first UI products.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#3291FF",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "/cover.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Email",
+      "short_name": "Email",
+      "description": "Email Ajay Pathak",
+      "url": "mailto:ajay.pathak.webdeveloper@gmail.com",
+      "icons": []
+    },
+    {
+      "name": "GitHub",
+      "short_name": "GitHub",
+      "description": "View on GitHub",
+      "url": "https://github.com/ap221882",
+      "icons": []
+    },
+    {
+      "name": "LinkedIn",
+      "short_name": "LinkedIn",
+      "description": "View on LinkedIn",
+      "url": "https://linkedin.com/in/ajay-pathak-developer",
+      "icons": []
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}
