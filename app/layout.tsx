@@ -327,9 +327,9 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geist.variable} ${geistMono.variable} bg-white tracking-tight antialiased dark:bg-zinc-950`}
+        className={`${geist.variable} ${geistMono.variable} bg-white tracking-tight antialiased dark:bg-zinc-950 overflow-x-hidden`}
       >
-        <div style={{ width: "100vw", height: "100%", position: "relative" }}>
+        <div style={{ width: "100%", height: "100%", position: "relative" }}>
           <ThemeProvider
             enableSystem={true}
             attribute="class"

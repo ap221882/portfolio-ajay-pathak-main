@@ -258,6 +258,7 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
                   style={{
                     display: "inline-block",
                     width: "7px",
+                    marginTop: "4px",
                     height: "14px",
                     background: t.ink,
                     marginLeft: "4px",
