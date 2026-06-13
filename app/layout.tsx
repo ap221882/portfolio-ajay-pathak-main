@@ -1,15 +1,7 @@
-import './globals.css';
-
-import type {
-  Metadata,
-  Viewport,
-} from 'next';
-import { ThemeProvider } from 'next-themes';
-import {
-  Geist,
-  Geist_Mono,
-} from 'next/font/google';
-import Script from 'next/script';
+import type { Metadata, Viewport } from "next";
+import { ThemeProvider } from "next-themes";
+import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 
 export const viewport: Viewport = {
   width: "device-width",
