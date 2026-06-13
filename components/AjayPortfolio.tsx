@@ -1,6 +1,6 @@
 import React, { CSSProperties, useEffect, useRef, useState } from "react";
 
-/* ─── Theme ──────────────────────────────────────────────────────────────── */
+
 type ThemeMode = "light" | "dark";
 
 interface Theme {
@@ -52,7 +52,7 @@ const T: Record<ThemeMode, Theme> = {
   },
 };
 
-/* ─── Content ────────────────────────────────────────────────────────────── */
+
 interface WorkItem {
   title: string;
   sub: string;
@@ -169,7 +169,7 @@ const TIMELINE: TimelineItem[] = [
   },
 ];
 
-/* ─── Global styles ──────────────────────────────────────────────────────── */
+
 const GLOBAL_CSS = `
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   @keyframes ap3-blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -227,6 +227,13 @@ const GLOBAL_CSS = `
   .light .ap3-toggle-on{background:#0070F3 !important;border-color:#0070F3 !important}
   .dark  .ap3-toggle-on{background:#3291FF !important;border-color:#3291FF !important}
 
+  /*
+   * WCAG 2.5.5: Toggle minimum touch target 44×44px.
+   * The visible button stays 44×24px; the wrapper expands the hit area
+   * by 10px on all sides via negative margin, keeping layout identical.
+   */
+  .ap3-toggle-wrap{display:inline-flex;align-items:center;padding:10px;margin:-10px}
+
   /* timeline row hover bg */
   .ap3-tl-row{position:relative;transition:background 0.2s ease,transform 0.25s cubic-bezier(0.16,1,0.3,1);border-radius:6px;margin:0 -12px;padding-left:12px;padding-right:12px}
   .light .ap3-tl-row:hover{background:#F5F5F5}
@@ -280,7 +287,7 @@ const GLOBAL_CSS = `
   }
 `;
 
-/* ─── Hooks ──────────────────────────────────────────────────────────────── */
+
 function useBreakpoint() {
   const [w, setW] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200,
@@ -348,6 +355,22 @@ function useClock() {
   return time;
 }
 
+
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : false,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return reduced;
+}
+
 function useGlobals() {
   useEffect(() => {
     if (document.getElementById("ap3-g")) return;
@@ -368,7 +391,7 @@ function useGlobals() {
   }, []);
 }
 
-/* ─── Toast ──────────────────────────────────────────────────────────────── */
+
 let _showToast: ((msg: string) => void) | null = null;
 
 function useToastManager() {
@@ -391,7 +414,7 @@ function showToast(m: string) {
   _showToast?.(m);
 }
 
-/* ─── Tiny helpers ───────────────────────────────────────────────────────── */
+
 const mono: CSSProperties = { fontFamily: "'IBM Plex Mono', monospace" };
 const sans: CSSProperties = { fontFamily: "'Inter', sans-serif" };
 
@@ -461,10 +484,12 @@ function Pill({ children, t }: PillProps) {
   );
 }
 
-/* ─── Progress bar ───────────────────────────────────────────────────────── */
+
 function ProgressBar({ progress, t }: { progress: number; t: Theme }) {
   return (
+    
     <div
+      aria-hidden="true"
       style={{
         position: "fixed",
         top: 0,
@@ -486,20 +511,21 @@ function ProgressBar({ progress, t }: { progress: number; t: Theme }) {
   );
 }
 
-/* ─── Toast display ──────────────────────────────────────────────────────── */
+
 function Toast({ msg, mode }: { msg: string | null; mode: ThemeMode }) {
   return (
     <div
       className={"ap3-toast " + mode + (msg ? " ap3-toast-show" : "")}
       role="status"
       aria-live="polite"
+      aria-atomic="true"
     >
       {msg}
     </div>
   );
 }
 
-/* ─── Toggle ─────────────────────────────────────────────────────────────── */
+
 function Toggle({
   mode,
   onToggle,
@@ -511,49 +537,52 @@ function Toggle({
 }) {
   const dark = mode === "dark";
   return (
-    <button
-      onClick={onToggle}
-      role="switch"
-      aria-checked={dark}
-      aria-label={"Switch to " + (dark ? "light" : "dark") + " mode"}
-      className={"ap3-toggle" + (dark ? " ap3-toggle-on" : "")}
-      style={{
-        width: "44px",
-        height: "24px",
-        borderRadius: "12px",
-        border: "1px solid " + t.borderMid,
-        background: t.toggleBg,
-        cursor: "pointer",
-        position: "relative",
-        padding: "3px",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <span
+    
+    <div className="ap3-toggle-wrap">
+      <button
+        onClick={onToggle}
+        role="switch"
+        aria-checked={dark}
+        aria-label={"Switch to " + (dark ? "light" : "dark") + " mode"}
+        className={"ap3-toggle" + (dark ? " ap3-toggle-on" : "")}
         style={{
-          width: "16px",
-          height: "16px",
-          borderRadius: "50%",
-          background: dark ? "#fff" : t.toggleKnob,
+          width: "44px",
+          height: "24px",
+          borderRadius: "12px",
+          border: "1px solid " + t.borderMid,
+          background: t.toggleBg,
+          cursor: "pointer",
+          position: "relative",
+          padding: "3px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          transform: dark ? "translateX(20px)" : "translateX(0)",
-          transition: "transform 0.35s cubic-bezier(0.34,1.56,0.64,1)",
         }}
       >
-        <i
-          className={dark ? "ti ti-moon" : "ti ti-sun"}
-          style={{ fontSize: "9px", color: dark ? "#3291FF" : "#FFFFFF" }}
-          aria-hidden="true"
-        />
-      </span>
-    </button>
+        <span
+          style={{
+            width: "16px",
+            height: "16px",
+            borderRadius: "50%",
+            background: dark ? "#fff" : t.toggleKnob,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: dark ? "translateX(20px)" : "translateX(0)",
+            transition: "transform 0.35s cubic-bezier(0.34,1.56,0.64,1)",
+          }}
+        >
+          <i
+            className={dark ? "ti ti-moon" : "ti ti-sun"}
+            style={{ fontSize: "9px", color: dark ? "#3291FF" : "#FFFFFF" }}
+            aria-hidden="true"
+          />
+        </span>
+      </button>
+    </div>
   );
 }
 
-/* ─── Nav ────────────────────────────────────────────────────────────────── */
+
 function Nav({
   mode,
   onToggle,
@@ -566,7 +595,9 @@ function Nav({
   mob: boolean;
 }) {
   return (
+    
     <nav
+      aria-label="Main navigation"
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -579,22 +610,24 @@ function Nav({
         zIndex: 99,
       }}
     >
-      {/* Magnetic logo */}
+      {}
       <span
         className="ap3-logo"
+        aria-hidden="true"
         style={{ ...mono, fontWeight: 500, fontSize: "13px", color: t.ink }}
       >
         AP
       </span>
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         {!mob && (
-          /* Status dot pulses faster on hover */
+          
           <div
             className="ap3-dot-wrap"
             style={{ display: "flex", alignItems: "center", gap: "6px" }}
           >
             <span
               className="ap3-dot"
+              aria-hidden="true"
               style={{
                 width: "5px",
                 height: "5px",
@@ -614,17 +647,20 @@ function Nav({
   );
 }
 
-/* ─── CTA button with ripple + clipboard ────────────────────────────────── */
+
 function CTAButton({
   href,
   t,
   primary,
   children,
+  ariaLabel,
 }: {
   href: string;
   t: Theme;
   primary?: boolean;
   children: React.ReactNode;
+  
+  ariaLabel?: string;
 }) {
   const ref = useRef<any>(null);
   const isEmail = href.startsWith("mailto:");
@@ -647,6 +683,7 @@ function CTAButton({
       ref={ref}
       href={href}
       onClick={handleClick}
+      aria-label={ariaLabel}
       target={isEmail ? undefined : "_blank"}
       rel="noopener noreferrer"
       className="ap3-press ap3-ripple-host"
@@ -669,7 +706,7 @@ function CTAButton({
   );
 }
 
-/* ─── Hero ───────────────────────────────────────────────────────────────── */
+
 function Hero({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
   const ref = useRef<any>(null);
   const [glow, setGlow] = useState({ x: 50, y: 50, active: false });
@@ -728,7 +765,7 @@ function Hero({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
         >
           Frontend engineer · Bengaluru · 4 YOE
         </Label>
-        {/* One-shot shimmer sweep on name */}
+        {}
         <h1
           id="hero-heading"
           className="ap3-name"
@@ -774,10 +811,15 @@ function Hero({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
             href="mailto:ajay.pathak.webdeveloper@gmail.com"
             t={t}
             primary
+            ariaLabel="Email Ajay Pathak"
           >
             Email me
           </CTAButton>
-          <CTAButton href="https://ajay-pathak.com" t={t}>
+          <CTAButton
+            href="https://ajay-pathak.com"
+            t={t}
+            ariaLabel="Visit ajay-pathak.com (opens in new tab)"
+          >
             ajay-pathak.com
           </CTAButton>
         </div>
@@ -814,7 +856,7 @@ function Hero({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
   );
 }
 
-/* ─── Work row ───────────────────────────────────────────────────────────── */
+
 function WorkRow({
   item,
   t,
@@ -880,17 +922,21 @@ function WorkRow({
         }}
       >
         <div>
-          <p
+          {}
+          <h3
             style={{
               ...sans,
               fontWeight: 600,
               fontSize: mob ? "17px" : "20px",
               color: t.ink,
               letterSpacing: "-0.015em",
+              margin: 0,
             }}
           >
             {item.title}
+            {}
             <span
+              aria-hidden="true"
               style={{
                 display: "inline-block",
                 width: "8px",
@@ -903,7 +949,7 @@ function WorkRow({
                 transition: "opacity 0.25s",
               }}
             />
-          </p>
+          </h3>
           <p
             style={{
               ...mono,
@@ -928,9 +974,10 @@ function WorkRow({
             {item.period}
           </span>
         )}
-        {/* Chevron turns accent when open */}
+        {}
         <i
           className={"ti ti-chevron-down" + (open ? " ap3-chevron-open" : "")}
+          aria-hidden="true"
           style={{
             fontSize: "14px",
             color: t.inkFaint,
@@ -939,7 +986,6 @@ function WorkRow({
             transition:
               "transform 0.3s cubic-bezier(0.16,1,0.3,1), color 0.2s ease",
           }}
-          aria-hidden="true"
         />
       </div>
       {open && (
@@ -967,7 +1013,7 @@ function WorkRow({
           >
             {item.detail}
           </p>
-          {/* Tags spring-pop in staggered */}
+          {}
           <div
             style={{
               display: "flex",
@@ -992,12 +1038,14 @@ function WorkRow({
   );
 }
 
-/* ─── Selected work ──────────────────────────────────────────────────────── */
+
 function SelectedWork({ t, mob }: { t: Theme; mob: boolean }) {
   const [ref, visible] = useReveal();
   return (
+    
     <section
       ref={ref as any}
+      aria-labelledby="section-work"
       className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
       style={{
         padding: mob ? "56px 24px" : "80px 56px",
@@ -1012,9 +1060,15 @@ function SelectedWork({ t, mob }: { t: Theme; mob: boolean }) {
           marginBottom: "8px",
         }}
       >
-        <Label t={t} section>
-          Selected work
-        </Label>
+        {}
+        <h2
+          id="section-work"
+          style={{ margin: 0, padding: 0, display: "contents" }}
+        >
+          <Label t={t} section>
+            Selected work
+          </Label>
+        </h2>
         <div style={{ flex: 1, height: "1px", background: t.border }} />
       </div>
       <div>
@@ -1037,7 +1091,7 @@ function SelectedWork({ t, mob }: { t: Theme; mob: boolean }) {
   );
 }
 
-/* ─── Craft card ─────────────────────────────────────────────────────────── */
+
 function CraftCard({ c, t, tab }: { c: CraftItem; t: Theme; tab: boolean }) {
   const [hov, setHov] = useState(false);
   const panelId = "craft-detail-" + c.name.toLowerCase().replace(/\W+/g, "-");
@@ -1073,8 +1127,10 @@ function CraftCard({ c, t, tab }: { c: CraftItem; t: Theme; tab: boolean }) {
       onMouseLeave={() => !tab && setHov(false)}
       style={{ background: t.bg, padding: "30px 26px", minHeight: "118px" }}
     >
+      {}
       <i
         className={"ti " + c.icon}
+        aria-hidden="true"
         style={{
           fontSize: "18px",
           color: hov ? t.accent : t.ink,
@@ -1082,7 +1138,6 @@ function CraftCard({ c, t, tab }: { c: CraftItem; t: Theme; tab: boolean }) {
           marginBottom: "16px",
           transition: "color 0.2s ease",
         }}
-        aria-hidden="true"
       />
       <p
         style={{
@@ -1114,6 +1169,7 @@ function CraftCard({ c, t, tab }: { c: CraftItem; t: Theme; tab: boolean }) {
       </p>
       {!hov && (
         <p
+          aria-hidden="true"
           style={{
             ...mono,
             fontSize: "10px",
@@ -1128,12 +1184,13 @@ function CraftCard({ c, t, tab }: { c: CraftItem; t: Theme; tab: boolean }) {
   );
 }
 
-/* ─── Craft ──────────────────────────────────────────────────────────────── */
+
 function Craft({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
   const [ref, visible] = useReveal();
   return (
     <section
       ref={ref as any}
+      aria-labelledby="section-craft"
       className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
       style={{
         padding: mob ? "56px 24px" : "80px 56px",
@@ -1148,9 +1205,14 @@ function Craft({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
           marginBottom: "44px",
         }}
       >
-        <Label t={t} section>
-          Craft
-        </Label>
+        <h2
+          id="section-craft"
+          style={{ margin: 0, padding: 0, display: "contents" }}
+        >
+          <Label t={t} section>
+            Craft
+          </Label>
+        </h2>
         <div style={{ flex: 1, height: "1px", background: t.border }} />
       </div>
       <div
@@ -1172,13 +1234,14 @@ function Craft({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
   );
 }
 
-/* ─── Timeline ───────────────────────────────────────────────────────────── */
+
 function Timeline({ t, mob }: { t: Theme; mob: boolean }) {
   const [ref, visible] = useReveal();
   const [hovIdx, setHovIdx] = useState<number | null>(null);
   return (
     <section
       ref={ref as any}
+      aria-labelledby="section-timeline"
       className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
       style={{
         padding: mob ? "56px 24px" : "80px 56px",
@@ -1193,9 +1256,14 @@ function Timeline({ t, mob }: { t: Theme; mob: boolean }) {
           marginBottom: "44px",
         }}
       >
-        <Label t={t} section>
-          Where I've been
-        </Label>
+        <h2
+          id="section-timeline"
+          style={{ margin: 0, padding: 0, display: "contents" }}
+        >
+          <Label t={t} section>
+            Where I've been
+          </Label>
+        </h2>
         <div style={{ flex: 1, height: "1px", background: t.border }} />
       </div>
       <div>
@@ -1253,7 +1321,7 @@ function Timeline({ t, mob }: { t: Theme; mob: boolean }) {
                 >
                   {item.co}
                 </span>
-                {/* Role string accents on hover */}
+                {}
                 <span
                   style={{
                     ...mono,
@@ -1285,17 +1353,23 @@ function Timeline({ t, mob }: { t: Theme; mob: boolean }) {
   );
 }
 
-/* ─── Terminal ───────────────────────────────────────────────────────────── */
+
 const CMD = "cat about.json";
 
 function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
   const clock = useClock();
   const [ref, visible] = useReveal();
   const [typed, setTyped] = useState(0);
+  
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (!visible) {
-      setTyped(0);
+      setTyped(reducedMotion ? CMD.length : 0);
+      return;
+    }
+    if (reducedMotion) {
+      setTyped(CMD.length);
       return;
     }
     let i = 0;
@@ -1305,7 +1379,7 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
       if (i >= CMD.length) clearInterval(id);
     }, 55);
     return () => clearInterval(id);
-  }, [visible]);
+  }, [visible, reducedMotion]);
 
   const done = typed >= CMD.length;
 
@@ -1324,9 +1398,24 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
     { text: "}", val: false },
   ];
 
+  
+  const srData: { term: string; def: string }[] = [
+    { term: "Name", def: "Ajay Pathak" },
+    { term: "Location", def: "Bengaluru, India" },
+    { term: "Local time", def: clock || "--:--:--" },
+    { term: "Open to", def: "remote, hybrid, full-time" },
+    { term: "Currently building", def: "Astra Wealth @ Groww" },
+    {
+      term: "AI workflow",
+      def: "Claude Code + Cursor for scaffolding, manual review for prod",
+    },
+    { term: "Obsessed with", def: "microfrontend DX and TDD" },
+  ];
+
   return (
     <section
       ref={ref as any}
+      aria-labelledby="section-terminal"
       className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
       style={{
         padding: mob ? "56px 24px" : "80px 56px",
@@ -1341,12 +1430,42 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
           marginBottom: "44px",
         }}
       >
-        <Label t={t} section>
-          Terminal
-        </Label>
+        <h2
+          id="section-terminal"
+          style={{ margin: 0, padding: 0, display: "contents" }}
+        >
+          <Label t={t} section>
+            Terminal
+          </Label>
+        </h2>
         <div style={{ flex: 1, height: "1px", background: t.border }} />
       </div>
+
+      {}
+      <dl
+        style={{
+          position: "absolute",
+          width: "1px",
+          height: "1px",
+          margin: "-1px",
+          padding: 0,
+          overflow: "hidden",
+          clip: "rect(0,0,0,0)",
+          whiteSpace: "nowrap",
+          border: 0,
+        }}
+      >
+        {srData.map(({ term, def }) => (
+          <div key={term}>
+            <dt>{term}</dt>
+            <dd>{def}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {}
       <div
+        aria-hidden="true"
         style={{
           background: t.surface,
           border: "1px solid " + t.border,
@@ -1354,7 +1473,7 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
           overflow: "hidden",
         }}
       >
-        {/* macOS traffic light dots */}
+        {}
         <div
           style={{
             display: "flex",
@@ -1377,7 +1496,7 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
             />
           ))}
         </div>
-        {/* Scanline shimmer + typewriter body */}
+        {}
         <div
           style={{
             padding: "20px 24px",
@@ -1385,8 +1504,8 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
             overflow: "hidden",
           }}
         >
-          <div className="ap3-scanline" aria-hidden="true" />
-          {/* Prompt line — types in */}
+          <div className="ap3-scanline" />
+          {}
           <div style={{ display: "flex", marginBottom: "2px" }}>
             <span
               style={{
@@ -1423,7 +1542,7 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
               />
             )}
           </div>
-          {/* Data lines — reveal only after typing done */}
+          {}
           {dataLines.map((ln, i) => (
             <div
               key={i}
@@ -1471,7 +1590,7 @@ function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
   );
 }
 
-/* ─── Footer ─────────────────────────────────────────────────────────────── */
+
 function Footer({ t, mob }: { t: Theme; mob: boolean }) {
   return (
     <footer
@@ -1494,42 +1613,55 @@ function Footer({ t, mob }: { t: Theme; mob: boolean }) {
       >
         Ajay Pathak · 2026 · Bengaluru
       </span>
-      <div style={{ display: "flex", gap: "24px" }}>
-        {[
-          { label: "email", href: "mailto:ajay.pathak.webdeveloper@gmail.com" },
-          {
-            label: "linkedin",
-            href: "https://linkedin.com/in/ajay-pathak-developer",
-          },
-          { label: "website", href: "https://ajay-pathak.com" },
-        ].map(({ label, href }) => (
-          <a
-            key={label}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ap3-press"
-            style={{
-              ...mono,
-              fontSize: "10px",
-              color: t.inkFaint,
-              textDecoration: "none",
-              letterSpacing: "0.08em",
-              borderBottom: "1px solid " + t.border,
-              paddingBottom: "1px",
-              display: "inline-block",
-              transition: "color 0.2s ease, border-color 0.2s ease",
-            }}
-          >
-            {label}
-          </a>
-        ))}
-      </div>
+      <nav aria-label="Social links">
+        <div style={{ display: "flex", gap: "24px" }}>
+          {[
+            {
+              label: "email",
+              href: "mailto:ajay.pathak.webdeveloper@gmail.com",
+              
+              ariaLabel: "Email Ajay Pathak",
+            },
+            {
+              label: "linkedin",
+              href: "https://linkedin.com/in/ajay-pathak-developer",
+              ariaLabel: "Ajay Pathak on LinkedIn (opens in new tab)",
+            },
+            {
+              label: "website",
+              href: "https://ajay-pathak.com",
+              ariaLabel: "Ajay Pathak's website (opens in new tab)",
+            },
+          ].map(({ label, href, ariaLabel }) => (
+            <a
+              key={label}
+              href={href}
+              aria-label={ariaLabel}
+              target={href.startsWith("mailto:") ? undefined : "_blank"}
+              rel="noopener noreferrer"
+              className="ap3-press"
+              style={{
+                ...mono,
+                fontSize: "10px",
+                color: t.inkFaint,
+                textDecoration: "none",
+                letterSpacing: "0.08em",
+                borderBottom: "1px solid " + t.border,
+                paddingBottom: "1px",
+                display: "inline-block",
+                transition: "color 0.2s ease, border-color 0.2s ease",
+              }}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+      </nav>
     </footer>
   );
 }
 
-/* ─── Root ───────────────────────────────────────────────────────────────── */
+
 export default function AjayPortfolio() {
   const [mounted, setMounted] = useState(false);
   const [mode, setMode] = useState<ThemeMode>("dark");
@@ -1546,7 +1678,7 @@ export default function AjayPortfolio() {
         setMode(stored);
       }
     } catch {
-      // Ignore storage failures in private or restricted browser contexts.
+      
     } finally {
       setMounted(true);
     }
@@ -1557,11 +1689,12 @@ export default function AjayPortfolio() {
     try {
       window.localStorage.setItem("theme", mode);
     } catch {
-      // Ignore storage failures in private or restricted browser contexts.
+      
     }
   }, [mode, mounted]);
 
   return (
+    
     <div
       className={mode}
       style={{
