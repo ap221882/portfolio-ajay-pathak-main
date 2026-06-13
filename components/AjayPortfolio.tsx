@@ -197,7 +197,7 @@ const GLOBAL_CSS = `
   .ap3-link::after{content:"";position:absolute;left:0;right:100%;bottom:-1px;height:1px;background:currentColor;transition:right 0.3s cubic-bezier(0.16,1,0.3,1)}
   .ap3-link:hover::after{right:0}
 
-  a:focus-visible,button:focus-visible{outline:2px solid #3B82F6;outline-offset:3px}
+  a:focus-visible,button:focus-visible,[role="button"]:focus-visible{outline:2px solid #3B82F6;outline-offset:3px}
 
   /* pill hover tint — theme-aware via parent class */
   .ap3-pill{transition:background 0.2s ease,border-color 0.2s ease,color 0.2s ease;cursor:default}
@@ -256,9 +256,7 @@ const GLOBAL_CSS = `
   .ap3-reveal.ap3-visible .ap3-sec-label::after{width:100%}
 
   /* name one-shot shimmer */
-  .ap3-name{background-size:200% auto;-webkit-background-clip:text;background-clip:text;animation:ap3-shimmer 1.8s linear 0.9s 1 forwards}
-  .light .ap3-name{background-image:linear-gradient(90deg,#000 30%,#0070F3 50%,#000 70%);-webkit-text-fill-color:transparent}
-  .dark  .ap3-name{background-image:linear-gradient(90deg,#fff 30%,#3291FF 50%,#fff 70%);-webkit-text-fill-color:transparent}
+  .ap3-name{animation:ap3-rise 0.8s cubic-bezier(0.16,1,0.3,1) 0.08s both}
 
   /* toast */
   .ap3-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(8px);padding:10px 20px;border-radius:6px;font-size:12px;letter-spacing:0.06em;font-family:'IBM Plex Mono',monospace;pointer-events:none;z-index:9999;white-space:nowrap;opacity:0;transition:opacity 0.25s ease,transform 0.3s cubic-bezier(0.34,1.56,0.64,1)}
@@ -487,7 +485,11 @@ function ProgressBar({ progress, t }: { progress: number; t: Theme }) {
 /* ─── Toast display ──────────────────────────────────────────────────────── */
 function Toast({ msg, mode }: { msg: string | null; mode: ThemeMode }) {
   return (
-    <div className={"ap3-toast " + mode + (msg ? " ap3-toast-show" : "")}>
+    <div
+      className={"ap3-toast " + mode + (msg ? " ap3-toast-show" : "")}
+      role="status"
+      aria-live="polite"
+    >
       {msg}
     </div>
   );
@@ -507,6 +509,8 @@ function Toggle({
   return (
     <button
       onClick={onToggle}
+      role="switch"
+      aria-checked={dark}
       aria-label={"Switch to " + (dark ? "light" : "dark") + " mode"}
       className={"ap3-toggle" + (dark ? " ap3-toggle-on" : "")}
       style={{
@@ -678,6 +682,7 @@ function Hero({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
 
   return (
     <section
+      aria-labelledby="hero-heading"
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={() => setGlow((g) => ({ ...g, active: false }))}
@@ -721,6 +726,7 @@ function Hero({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
         </Label>
         {/* One-shot shimmer sweep on name */}
         <h1
+          id="hero-heading"
           className="ap3-name"
           style={{
             ...sans,
@@ -730,7 +736,6 @@ function Hero({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
             lineHeight: 0.98,
             letterSpacing: "-0.045em",
             marginBottom: "36px",
-            animation: "ap3-rise 0.8s cubic-bezier(0.16,1,0.3,1) 0.08s both",
           }}
         >
           Ajay Pathak
@@ -829,13 +834,32 @@ function WorkRow({
     setTagsOn(false);
   }, [open]);
 
+  const panelId = "work-panel-" + item.title.toLowerCase().replace(/\W+/g, "-");
+  const headerId =
+    "work-trigger-" + item.title.toLowerCase().replace(/\W+/g, "-");
+
+  const toggleOpen = () => setOpen((o) => !o);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleOpen();
+    }
+  };
+
   return (
     <div
       className="ap3-work-row"
       style={{ borderBottom: last ? "none" : "1px solid " + t.border }}
     >
       <div
-        onClick={() => setOpen((o) => !o)}
+        id={headerId}
+        role="button"
+        tabIndex={0}
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={toggleOpen}
+        onKeyDown={handleKeyDown}
         onMouseEnter={() => setHov(true)}
         onMouseLeave={() => setHov(false)}
         style={{
@@ -914,6 +938,9 @@ function WorkRow({
       </div>
       {open && (
         <div
+          id={panelId}
+          role="region"
+          aria-labelledby={headerId}
           className="ap3-in"
           style={{
             paddingBottom: "30px",
@@ -1471,12 +1498,29 @@ function Footer({ t, mob }: { t: Theme; mob: boolean }) {
 
 /* ─── Root ───────────────────────────────────────────────────────────────── */
 export default function AjayPortfolio() {
-  const [mode, setMode] = useState<ThemeMode>("dark");
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    if (typeof window === "undefined") return "dark";
+    try {
+      return window.localStorage.getItem("theme") === "light"
+        ? "light"
+        : "dark";
+    } catch {
+      return "dark";
+    }
+  });
   const t = T[mode];
   const { mob, tab } = useBreakpoint();
   const progress = useScrollProgress();
   const toastMsg = useToastManager();
   useGlobals();
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("theme", mode);
+    } catch {
+      // Ignore storage failures in private or restricted browser contexts.
+    }
+  }, [mode]);
 
   return (
     <div
@@ -1495,11 +1539,13 @@ export default function AjayPortfolio() {
         t={t}
         mob={mob}
       />
-      <Hero t={t} mob={mob} tab={tab} />
-      <SelectedWork t={t} mob={mob} />
-      <Craft t={t} mob={mob} />
-      <Timeline t={t} mob={mob} />
-      <Terminal t={t} mob={mob} />
+      <main>
+        <Hero t={t} mob={mob} tab={tab} />
+        <SelectedWork t={t} mob={mob} />
+        <Craft t={t} mob={mob} />
+        <Timeline t={t} mob={mob} />
+        <Terminal t={t} mob={mob} />
+      </main>
       <Footer t={t} mob={mob} />
       <Toast msg={toastMsg} mode={mode} />
     </div>
