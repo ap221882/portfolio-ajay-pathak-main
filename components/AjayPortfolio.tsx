@@ -169,9 +169,118 @@ const TIMELINE: TimelineItem[] = [
   },
 ];
 
+/* ─── Global styles ──────────────────────────────────────────────────────── */
+const GLOBAL_CSS = `
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  @keyframes ap3-blink{0%,100%{opacity:1}50%{opacity:0}}
+  @keyframes ap3-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes ap3-rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+  @keyframes ap3-ripple{0%{transform:scale(0);opacity:0.5}100%{transform:scale(4);opacity:0}}
+  @keyframes ap3-scanline{0%{top:-20%}100%{top:110%}}
+  @keyframes ap3-dot-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+  @keyframes ap3-shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+
+  /* reveal / stagger */
+  .ap3-in{animation:ap3-in 0.5s cubic-bezier(0.16,1,0.3,1) both}
+  .ap3-stagger{opacity:0;transform:translateY(22px);transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1),transform 0.7s cubic-bezier(0.16,1,0.3,1)}
+  .ap3-stagger.ap3-visible{opacity:1;transform:none}
+  .ap3-reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+  .ap3-reveal.ap3-visible{opacity:1;transform:none}
+
+  /* press */
+  .ap3-press{transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s ease,background 0.2s ease,border-color 0.2s ease,color 0.2s ease}
+  .ap3-press:hover{transform:translateY(-1px)}
+  .ap3-press:active{transform:translateY(0) scale(0.97)}
+
+  /* underline link */
+  .ap3-link{position:relative;text-decoration:none}
+  .ap3-link::after{content:"";position:absolute;left:0;right:100%;bottom:-1px;height:1px;background:currentColor;transition:right 0.3s cubic-bezier(0.16,1,0.3,1)}
+  .ap3-link:hover::after{right:0}
+
+  a:focus-visible,button:focus-visible{outline:2px solid #3B82F6;outline-offset:3px}
+
+  /* pill hover tint — theme-aware via parent class */
+  .ap3-pill{transition:background 0.2s ease,border-color 0.2s ease,color 0.2s ease;cursor:default}
+  .light .ap3-pill:hover{background:#F0F7FF;border-color:#A8CEFF;color:#0058CC}
+  .dark  .ap3-pill:hover{background:#0C2D52;border-color:#3291FF;color:#52A8FF}
+
+  /* craft card left-border reveal */
+  .ap3-craft-card{position:relative;overflow:hidden}
+  .ap3-craft-card::before{content:"";position:absolute;inset:0;border-left:2px solid transparent;transition:border-color 0.25s ease;pointer-events:none}
+  .light .ap3-craft-card:hover::before{border-color:#0070F3}
+  .dark  .ap3-craft-card:hover::before{border-color:#3291FF}
+
+  /* work row bottom accent sweep */
+  .ap3-work-row{position:relative}
+  .ap3-work-row::after{content:"";position:absolute;bottom:0;left:0;width:0;height:2px;transition:width 0.35s cubic-bezier(0.16,1,0.3,1);pointer-events:none}
+  .light .ap3-work-row::after{background:#0070F3}
+  .dark  .ap3-work-row::after{background:#3291FF}
+  .ap3-work-row:hover::after{width:100%}
+
+  /* work chevron accent when open */
+  .ap3-chevron-open{color:#3291FF !important}
+  .light .ap3-chevron-open{color:#0070F3 !important}
+
+  /* toggle track accent when dark */
+  .ap3-toggle{transition:background 0.35s ease,border-color 0.35s ease}
+  .light .ap3-toggle-on{background:#0070F3 !important;border-color:#0070F3 !important}
+  .dark  .ap3-toggle-on{background:#3291FF !important;border-color:#3291FF !important}
+
+  /* timeline row hover bg */
+  .ap3-tl-row{transition:background 0.2s ease;border-radius:6px;margin:0 -12px;padding-left:12px;padding-right:12px}
+  .light .ap3-tl-row:hover{background:#F5F5F5}
+  .dark  .ap3-tl-row:hover{background:#0A0A0A}
+
+  /* tag spring-pop */
+  .ap3-tag-pop{transform:scale(0.85);opacity:0;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s ease;display:inline-block}
+  .ap3-tag-pop.ap3-tag-on{transform:scale(1);opacity:1}
+
+  /* ripple inside buttons */
+  .ap3-ripple-host{position:relative;overflow:hidden}
+  .ap3-ripple-el{position:absolute;border-radius:50%;width:60px;height:60px;margin:-30px 0 0 -30px;background:rgba(255,255,255,0.25);animation:ap3-ripple 0.55s linear;pointer-events:none}
+
+  /* "AP" logo magnetic spacing */
+  .ap3-logo{transition:letter-spacing 0.3s cubic-bezier(0.34,1.56,0.64,1);cursor:default}
+  .ap3-logo:hover{letter-spacing:0.18em}
+
+  /* status dot pulse-on-hover */
+  .ap3-dot{animation:ap3-blink 2.5s ease-in-out infinite}
+  .ap3-dot-wrap:hover .ap3-dot{animation:ap3-dot-pulse 0.6s ease infinite}
+
+  /* terminal scanline */
+  .ap3-scanline{position:absolute;left:0;right:0;height:20px;pointer-events:none;opacity:0.04;background:linear-gradient(transparent,rgba(255,255,255,0.8),transparent);animation:ap3-scanline 4s linear infinite}
+
+  /* section label underline */
+  .ap3-sec-label{position:relative;display:inline-block}
+  .ap3-sec-label::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:currentColor;transition:width 0.4s cubic-bezier(0.16,1,0.3,1)}
+  .ap3-reveal.ap3-visible .ap3-sec-label::after{width:100%}
+
+  /* name one-shot shimmer */
+  .ap3-name{background-size:200% auto;-webkit-background-clip:text;background-clip:text;animation:ap3-shimmer 1.8s linear 0.9s 1 forwards}
+  .light .ap3-name{background-image:linear-gradient(90deg,#000 30%,#0070F3 50%,#000 70%);-webkit-text-fill-color:transparent}
+  .dark  .ap3-name{background-image:linear-gradient(90deg,#fff 30%,#3291FF 50%,#fff 70%);-webkit-text-fill-color:transparent}
+
+  /* toast */
+  .ap3-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(8px);padding:10px 20px;border-radius:6px;font-size:12px;letter-spacing:0.06em;font-family:'IBM Plex Mono',monospace;pointer-events:none;z-index:9999;white-space:nowrap;opacity:0;transition:opacity 0.25s ease,transform 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+  .ap3-toast.ap3-toast-show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .light .ap3-toast{background:#000;color:#fff}
+  .dark  .ap3-toast{background:#fff;color:#000}
+
+  @media (prefers-reduced-motion:reduce){
+    .ap3-stagger,.ap3-reveal{transition:opacity 0.4s ease !important;transform:none !important}
+    .ap3-in,.ap3-name{animation:none !important;opacity:1;-webkit-text-fill-color:inherit;color:inherit}
+    .ap3-press,.ap3-press:hover,.ap3-press:active{transform:none !important}
+    .ap3-logo:hover{letter-spacing:inherit !important}
+    .ap3-work-row::after,.ap3-sec-label::after{transition:none !important}
+    .ap3-tag-pop{transition:none !important}
+    .ap3-scanline,.ap3-dot{animation:none !important}
+    *{animation-duration:0.01ms !important}
+  }
+`;
+
 /* ─── Hooks ──────────────────────────────────────────────────────────────── */
-function useBreakpoint(): { mob: boolean; tab: boolean } {
-  const [w, setW] = useState<number>(
+function useBreakpoint() {
+  const [w, setW] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200,
   );
   useEffect(() => {
@@ -182,8 +291,8 @@ function useBreakpoint(): { mob: boolean; tab: boolean } {
   return { mob: w < 600, tab: w < 920 };
 }
 
-function useScrollProgress(): number {
-  const [p, setP] = useState<number>(0);
+function useScrollProgress() {
+  const [p, setP] = useState(0);
   useEffect(() => {
     const h = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -196,9 +305,9 @@ function useScrollProgress(): number {
   return p;
 }
 
-function useReveal(): [React.RefObject<HTMLDivElement>, boolean] {
+function useReveal(): [React.RefObject<HTMLElement>, boolean] {
   const ref = useRef<any>(null);
-  const [visible, setVisible] = useState<boolean>(false);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -217,7 +326,27 @@ function useReveal(): [React.RefObject<HTMLDivElement>, boolean] {
   return [ref, visible];
 }
 
-function useGlobals(): void {
+function useClock() {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const tick = () =>
+      setTime(
+        new Intl.DateTimeFormat("en-GB", {
+          timeZone: "Asia/Kolkata",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        }).format(new Date()),
+      );
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+function useGlobals() {
   useEffect(() => {
     if (document.getElementById("ap3-g")) return;
     const l1 = document.createElement("link");
@@ -232,68 +361,65 @@ function useGlobals(): void {
     document.head.appendChild(l2);
     const s = document.createElement("style");
     s.id = "ap3-g";
-    s.textContent = `
-      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-      @keyframes ap3-blink{0%,100%{opacity:1}50%{opacity:0}}
-      @keyframes ap3-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-      @keyframes ap3-rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-      .ap3-in{animation:ap3-in 0.5s cubic-bezier(0.16,1,0.3,1) both}
-      .ap3-stagger{opacity:0;transform:translateY(22px);transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1),transform 0.7s cubic-bezier(0.16,1,0.3,1)}
-      .ap3-stagger.ap3-visible{opacity:1;transform:none}
-      .ap3-reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1)}
-      .ap3-reveal.ap3-visible{opacity:1;transform:none}
-      .ap3-press{transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s ease,background 0.2s ease,border-color 0.2s ease,color 0.2s ease}
-      .ap3-press:hover{transform:translateY(-1px)}
-      .ap3-press:active{transform:translateY(0) scale(0.97)}
-      .ap3-link{position:relative;text-decoration:none}
-      .ap3-link::after{content:"";position:absolute;left:0;right:100%;bottom:-1px;height:1px;background:currentColor;transition:right 0.3s cubic-bezier(0.16,1,0.3,1)}
-      .ap3-link:hover::after{right:0}
-      a:focus-visible,button:focus-visible{outline:2px solid #3B82F6;outline-offset:3px}
-      @media (prefers-reduced-motion: reduce){
-        .ap3-stagger,.ap3-reveal{transition:opacity 0.4s ease !important;transform:none !important}
-        .ap3-in{animation:none !important;opacity:1}
-        .ap3-press,.ap3-press:hover,.ap3-press:active{transform:none !important}
-        *{animation-duration:0.01ms !important}
-      }
-    `;
+    s.textContent = GLOBAL_CSS;
     document.head.appendChild(s);
   }, []);
 }
 
-/* ─── Live clock (Asia/Kolkata) ─────────────────────────────────────────── */
-function useClock(): string {
-  const [time, setTime] = useState<string>("");
+/* ─── Toast ──────────────────────────────────────────────────────────────── */
+let _showToast: ((msg: string) => void) | null = null;
+
+function useToastManager() {
+  const [msg, setMsg] = useState<string | null>(null);
   useEffect(() => {
-    const tick = () => {
-      const fmt = new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      });
-      setTime(fmt.format(new Date()));
+    _showToast = setMsg;
+    return () => {
+      _showToast = null;
     };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
   }, []);
-  return time;
+  useEffect(() => {
+    if (!msg) return;
+    const id = setTimeout(() => setMsg(null), 2200);
+    return () => clearTimeout(id);
+  }, [msg]);
+  return msg;
+}
+
+function showToast(m: string) {
+  _showToast?.(m);
 }
 
 /* ─── Tiny helpers ───────────────────────────────────────────────────────── */
 const mono: CSSProperties = { fontFamily: "'IBM Plex Mono', monospace" };
 const sans: CSSProperties = { fontFamily: "'Inter', sans-serif" };
 
+function addRipple(e: React.MouseEvent, ref: React.RefObject<HTMLElement>) {
+  const btn = ref.current;
+  if (!btn) return;
+  const r = btn.getBoundingClientRect();
+  const el = document.createElement("span");
+  el.className = "ap3-ripple-el";
+  el.style.top = e.clientY - r.top + "px";
+  el.style.left = e.clientX - r.left + "px";
+  btn.appendChild(el);
+  setTimeout(() => el.remove(), 600);
+}
+
 interface LabelProps {
   children: React.ReactNode;
   t: Theme;
   style?: CSSProperties;
+  section?: boolean;
 }
-
-function Label({ children, t, style: extra = {} }: LabelProps) {
+function Label({
+  children,
+  t,
+  style: extra = {},
+  section = false,
+}: LabelProps) {
   return (
     <span
+      className={section ? "ap3-sec-label" : ""}
       style={{
         ...mono,
         fontSize: "10px",
@@ -312,10 +438,10 @@ interface PillProps {
   children: React.ReactNode;
   t: Theme;
 }
-
 function Pill({ children, t }: PillProps) {
   return (
     <span
+      className="ap3-pill"
       style={{
         ...mono,
         fontSize: "10px",
@@ -333,13 +459,8 @@ function Pill({ children, t }: PillProps) {
   );
 }
 
-/* ─── Scroll progress bar ────────────────────────────────────────────────── */
-interface ProgressBarProps {
-  progress: number;
-  t: Theme;
-}
-
-function ProgressBar({ progress, t }: ProgressBarProps) {
+/* ─── Progress bar ───────────────────────────────────────────────────────── */
+function ProgressBar({ progress, t }: { progress: number; t: Theme }) {
   return (
     <div
       style={{
@@ -348,7 +469,6 @@ function ProgressBar({ progress, t }: ProgressBarProps) {
         left: 0,
         right: 0,
         height: "2px",
-        background: "transparent",
         zIndex: 200,
       }}
     >
@@ -364,19 +484,31 @@ function ProgressBar({ progress, t }: ProgressBarProps) {
   );
 }
 
+/* ─── Toast display ──────────────────────────────────────────────────────── */
+function Toast({ msg, mode }: { msg: string | null; mode: ThemeMode }) {
+  return (
+    <div className={"ap3-toast " + mode + (msg ? " ap3-toast-show" : "")}>
+      {msg}
+    </div>
+  );
+}
+
 /* ─── Toggle ─────────────────────────────────────────────────────────────── */
-interface ToggleProps {
+function Toggle({
+  mode,
+  onToggle,
+  t,
+}: {
   mode: ThemeMode;
   onToggle: () => void;
   t: Theme;
-}
-
-function Toggle({ mode, onToggle, t }: ToggleProps) {
+}) {
   const dark = mode === "dark";
   return (
     <button
       onClick={onToggle}
       aria-label={"Switch to " + (dark ? "light" : "dark") + " mode"}
+      className={"ap3-toggle" + (dark ? " ap3-toggle-on" : "")}
       style={{
         width: "44px",
         height: "24px",
@@ -388,7 +520,6 @@ function Toggle({ mode, onToggle, t }: ToggleProps) {
         padding: "3px",
         display: "flex",
         alignItems: "center",
-        transition: "background 0.3s",
       }}
     >
       <span
@@ -396,7 +527,7 @@ function Toggle({ mode, onToggle, t }: ToggleProps) {
           width: "16px",
           height: "16px",
           borderRadius: "50%",
-          background: t.toggleKnob,
+          background: dark ? "#fff" : t.toggleKnob,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -406,7 +537,7 @@ function Toggle({ mode, onToggle, t }: ToggleProps) {
       >
         <i
           className={dark ? "ti ti-moon" : "ti ti-sun"}
-          style={{ fontSize: "9px", color: dark ? "#0A0A0A" : "#FFFFFF" }}
+          style={{ fontSize: "9px", color: dark ? "#3291FF" : "#FFFFFF" }}
           aria-hidden="true"
         />
       </span>
@@ -415,14 +546,17 @@ function Toggle({ mode, onToggle, t }: ToggleProps) {
 }
 
 /* ─── Nav ────────────────────────────────────────────────────────────────── */
-interface NavProps {
+function Nav({
+  mode,
+  onToggle,
+  t,
+  mob,
+}: {
   mode: ThemeMode;
   onToggle: () => void;
   t: Theme;
   mob: boolean;
-}
-
-function Nav({ mode, onToggle, t, mob }: NavProps) {
+}) {
   return (
     <nav
       style={{
@@ -437,28 +571,28 @@ function Nav({ mode, onToggle, t, mob }: NavProps) {
         zIndex: 99,
       }}
     >
+      {/* Magnetic logo */}
       <span
-        style={{
-          ...mono,
-          fontWeight: 500,
-          fontSize: "13px",
-          color: t.ink,
-          letterSpacing: "-0.01em",
-        }}
+        className="ap3-logo"
+        style={{ ...mono, fontWeight: 500, fontSize: "13px", color: t.ink }}
       >
         AP
       </span>
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         {!mob && (
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          /* Status dot pulses faster on hover */
+          <div
+            className="ap3-dot-wrap"
+            style={{ display: "flex", alignItems: "center", gap: "6px" }}
+          >
             <span
+              className="ap3-dot"
               style={{
                 width: "5px",
                 height: "5px",
                 borderRadius: "50%",
                 background: "#22C55E",
                 display: "inline-block",
-                animation: "ap3-blink 2.5s ease-in-out infinite",
               }}
             />
             <Label t={t} style={{ color: t.inkMid, letterSpacing: "0.12em" }}>
@@ -472,22 +606,65 @@ function Nav({ mode, onToggle, t, mob }: NavProps) {
   );
 }
 
-/* ─── Hero ───────────────────────────────────────────────────────────────── */
-interface HeroProps {
+/* ─── CTA button with ripple + clipboard ────────────────────────────────── */
+function CTAButton({
+  href,
+  t,
+  primary,
+  children,
+}: {
+  href: string;
   t: Theme;
-  mob: boolean;
-  tab: boolean;
+  primary?: boolean;
+  children: React.ReactNode;
+}) {
+  const ref = useRef<any>(null);
+  const isEmail = href.startsWith("mailto:");
+
+  const handleClick = (e: React.MouseEvent) => {
+    addRipple(e, ref);
+    if (isEmail) {
+      e.preventDefault();
+      navigator.clipboard
+        .writeText(href.replace("mailto:", ""))
+        .then(() => showToast("email copied ✓"))
+        .catch(() => {
+          window.location.href = href;
+        });
+    }
+  };
+
+  return (
+    <a
+      ref={ref}
+      href={href}
+      onClick={handleClick}
+      target={isEmail ? undefined : "_blank"}
+      rel="noopener noreferrer"
+      className="ap3-press ap3-ripple-host"
+      style={{
+        ...sans,
+        fontWeight: 500,
+        fontSize: "13px",
+        color: primary ? t.bg : t.ink,
+        background: primary ? t.ink : "transparent",
+        padding: "12px 26px",
+        borderRadius: "6px",
+        textDecoration: "none",
+        letterSpacing: "0.01em",
+        display: "inline-block",
+        border: primary ? "none" : "1px solid " + t.border,
+      }}
+    >
+      {children}
+    </a>
+  );
 }
 
-interface GlowState {
-  x: number;
-  y: number;
-  active: boolean;
-}
-
-function Hero({ t, mob, tab }: HeroProps) {
-  const ref = useRef<HTMLElement>(null);
-  const [glow, setGlow] = useState<GlowState>({ x: 50, y: 50, active: false });
+/* ─── Hero ───────────────────────────────────────────────────────────────── */
+function Hero({ t, mob, tab }: { t: Theme; mob: boolean; tab: boolean }) {
+  const ref = useRef<any>(null);
+  const [glow, setGlow] = useState({ x: 50, y: 50, active: false });
 
   const onMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!ref.current) return;
@@ -531,7 +708,6 @@ function Hero({ t, mob, tab }: HeroProps) {
           }}
         />
       )}
-
       <div style={{ position: "relative" }}>
         <Label
           t={t}
@@ -543,14 +719,13 @@ function Hero({ t, mob, tab }: HeroProps) {
         >
           Frontend engineer · Bengaluru · 4 YOE
         </Label>
-
+        {/* One-shot shimmer sweep on name */}
         <h1
+          className="ap3-name"
           style={{
             ...sans,
             fontWeight: 800,
-            fontSize: mob
-              ? "clamp(48px, 16vw, 76px)"
-              : "clamp(80px, 9vw, 132px)",
+            fontSize: mob ? "clamp(48px,16vw,76px)" : "clamp(80px,9vw,132px)",
             color: t.ink,
             lineHeight: 0.98,
             letterSpacing: "-0.045em",
@@ -560,7 +735,6 @@ function Hero({ t, mob, tab }: HeroProps) {
         >
           Ajay Pathak
         </h1>
-
         <p
           style={{
             ...sans,
@@ -579,7 +753,6 @@ function Hero({ t, mob, tab }: HeroProps) {
           Currently shipping <span style={{ color: t.ink }}>Astra Wealth</span>{" "}
           at Groww.
         </p>
-
         <div
           style={{
             display: "flex",
@@ -588,48 +761,18 @@ function Hero({ t, mob, tab }: HeroProps) {
             animation: "ap3-rise 0.8s cubic-bezier(0.16,1,0.3,1) 0.28s both",
           }}
         >
-          <a
+          <CTAButton
             href="mailto:ajay.pathak.webdeveloper@gmail.com"
-            className="ap3-press"
-            style={{
-              ...sans,
-              fontWeight: 500,
-              fontSize: "13px",
-              color: t.bg,
-              background: t.ink,
-              padding: "12px 26px",
-              borderRadius: "6px",
-              textDecoration: "none",
-              letterSpacing: "0.01em",
-              display: "inline-block",
-            }}
+            t={t}
+            primary
           >
             Email me
-          </a>
-          <a
-            href="https://ajay-pathak.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ap3-press"
-            style={{
-              ...sans,
-              fontWeight: 500,
-              fontSize: "13px",
-              color: t.ink,
-              background: "transparent",
-              border: "1px solid " + t.border,
-              padding: "12px 26px",
-              borderRadius: "6px",
-              textDecoration: "none",
-              letterSpacing: "0.01em",
-              display: "inline-block",
-            }}
-          >
+          </CTAButton>
+          <CTAButton href="https://ajay-pathak.com" t={t}>
             ajay-pathak.com
-          </a>
+          </CTAButton>
         </div>
       </div>
-
       <div
         style={{
           display: "flex",
@@ -662,20 +805,35 @@ function Hero({ t, mob, tab }: HeroProps) {
   );
 }
 
-/* ─── Work ───────────────────────────────────────────────────────────────── */
-interface WorkRowProps {
+/* ─── Work row ───────────────────────────────────────────────────────────── */
+function WorkRow({
+  item,
+  t,
+  mob,
+  last,
+}: {
   item: WorkItem;
   t: Theme;
   mob: boolean;
   last: boolean;
-}
+}) {
+  const [open, setOpen] = useState(false);
+  const [hov, setHov] = useState(false);
+  const [tagsOn, setTagsOn] = useState(false);
 
-function WorkRow({ item, t, mob, last }: WorkRowProps) {
-  const [open, setOpen] = useState<boolean>(false);
-  const [hov, setHov] = useState<boolean>(false);
+  useEffect(() => {
+    if (open) {
+      const id = setTimeout(() => setTagsOn(true), 60);
+      return () => clearTimeout(id);
+    }
+    setTagsOn(false);
+  }, [open]);
 
   return (
-    <div style={{ borderBottom: last ? "none" : "1px solid " + t.border }}>
+    <div
+      className="ap3-work-row"
+      style={{ borderBottom: last ? "none" : "1px solid " + t.border }}
+    >
       <div
         onClick={() => setOpen((o) => !o)}
         onMouseEnter={() => setHov(true)}
@@ -740,19 +898,20 @@ function WorkRow({ item, t, mob, last }: WorkRowProps) {
             {item.period}
           </span>
         )}
+        {/* Chevron turns accent when open */}
         <i
-          className={"ti ti-chevron-down"}
+          className={"ti ti-chevron-down" + (open ? " ap3-chevron-open" : "")}
           style={{
             fontSize: "14px",
             color: t.inkFaint,
             justifySelf: "end",
             transform: open ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform 0.3s cubic-bezier(0.16,1,0.3,1)",
+            transition:
+              "transform 0.3s cubic-bezier(0.16,1,0.3,1), color 0.2s ease",
           }}
           aria-hidden="true"
         />
       </div>
-
       {open && (
         <div
           className="ap3-in"
@@ -775,6 +934,7 @@ function WorkRow({ item, t, mob, last }: WorkRowProps) {
           >
             {item.detail}
           </p>
+          {/* Tags spring-pop in staggered */}
           <div
             style={{
               display: "flex",
@@ -783,10 +943,14 @@ function WorkRow({ item, t, mob, last }: WorkRowProps) {
               justifyContent: mob ? "flex-start" : "flex-end",
             }}
           >
-            {item.tags.map((tg) => (
-              <Pill key={tg} t={t}>
-                {tg}
-              </Pill>
+            {item.tags.map((tg, i) => (
+              <span
+                key={tg}
+                className={"ap3-tag-pop" + (tagsOn ? " ap3-tag-on" : "")}
+                style={{ transitionDelay: tagsOn ? i * 0.06 + "s" : "0s" }}
+              >
+                <Pill t={t}>{tg}</Pill>
+              </span>
             ))}
           </div>
         </div>
@@ -795,32 +959,69 @@ function WorkRow({ item, t, mob, last }: WorkRowProps) {
   );
 }
 
-/* ─── Craft ──────────────────────────────────────────────────────────────── */
-interface CraftCardProps {
-  c: CraftItem;
-  t: Theme;
+/* ─── Selected work ──────────────────────────────────────────────────────── */
+function SelectedWork({ t, mob }: { t: Theme; mob: boolean }) {
+  const [ref, visible] = useReveal();
+  return (
+    <section
+      ref={ref as any}
+      className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
+      style={{
+        padding: mob ? "56px 24px" : "80px 56px",
+        borderBottom: "1px solid " + t.border,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+          marginBottom: "8px",
+        }}
+      >
+        <Label t={t} section>
+          Selected work
+        </Label>
+        <div style={{ flex: 1, height: "1px", background: t.border }} />
+      </div>
+      <div>
+        {WORKS.map((item, i) => (
+          <div
+            key={item.title}
+            className={"ap3-stagger" + (visible ? " ap3-visible" : "")}
+            style={{ transitionDelay: visible ? i * 0.08 + "s" : "0s" }}
+          >
+            <WorkRow
+              item={item}
+              t={t}
+              mob={mob}
+              last={i === WORKS.length - 1}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
-function CraftCard({ c, t }: CraftCardProps) {
-  const [hov, setHov] = useState<boolean>(false);
+/* ─── Craft card ─────────────────────────────────────────────────────────── */
+function CraftCard({ c, t }: { c: CraftItem; t: Theme }) {
+  const [hov, setHov] = useState(false);
   return (
     <div
+      className="ap3-craft-card"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      style={{
-        background: t.bg,
-        padding: "30px 26px",
-        position: "relative",
-        minHeight: "118px",
-      }}
+      style={{ background: t.bg, padding: "30px 26px", minHeight: "118px" }}
     >
       <i
         className={"ti " + c.icon}
         style={{
           fontSize: "18px",
-          color: t.ink,
+          color: hov ? t.accent : t.ink,
           display: "block",
           marginBottom: "16px",
+          transition: "color 0.2s ease",
         }}
         aria-hidden="true"
       />
@@ -858,7 +1059,6 @@ function CraftCard({ c, t }: CraftCardProps) {
             fontSize: "10px",
             color: t.inkFaint,
             letterSpacing: "0.08em",
-            marginTop: "0",
           }}
         >
           hover for detail
@@ -868,16 +1068,12 @@ function CraftCard({ c, t }: CraftCardProps) {
   );
 }
 
-interface CraftProps {
-  t: Theme;
-  mob: boolean;
-}
-
-function Craft({ t, mob }: CraftProps) {
+/* ─── Craft ──────────────────────────────────────────────────────────────── */
+function Craft({ t, mob }: { t: Theme; mob: boolean }) {
   const [ref, visible] = useReveal();
   return (
     <section
-      ref={ref}
+      ref={ref as any}
       className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
       style={{
         padding: mob ? "56px 24px" : "80px 56px",
@@ -892,7 +1088,9 @@ function Craft({ t, mob }: CraftProps) {
           marginBottom: "44px",
         }}
       >
-        <Label t={t}>Craft</Label>
+        <Label t={t} section>
+          Craft
+        </Label>
         <div style={{ flex: 1, height: "1px", background: t.border }} />
       </div>
       <div
@@ -915,16 +1113,12 @@ function Craft({ t, mob }: CraftProps) {
 }
 
 /* ─── Timeline ───────────────────────────────────────────────────────────── */
-interface TimelineProps {
-  t: Theme;
-  mob: boolean;
-}
-
-function Timeline({ t, mob }: TimelineProps) {
+function Timeline({ t, mob }: { t: Theme; mob: boolean }) {
   const [ref, visible] = useReveal();
+  const [hovIdx, setHovIdx] = useState<number | null>(null);
   return (
     <section
-      ref={ref}
+      ref={ref as any}
       className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
       style={{
         padding: mob ? "56px 24px" : "80px 56px",
@@ -939,14 +1133,18 @@ function Timeline({ t, mob }: TimelineProps) {
           marginBottom: "44px",
         }}
       >
-        <Label t={t}>Where I've been</Label>
+        <Label t={t} section>
+          Where I've been
+        </Label>
         <div style={{ flex: 1, height: "1px", background: t.border }} />
       </div>
-
       <div>
         {TIMELINE.map((item, i) => (
           <div
             key={item.co + i}
+            className="ap3-tl-row"
+            onMouseEnter={() => setHovIdx(i)}
+            onMouseLeave={() => setHovIdx(null)}
             style={{
               display: "grid",
               gridTemplateColumns: mob ? "1fr" : "150px 1fr",
@@ -995,12 +1193,14 @@ function Timeline({ t, mob }: TimelineProps) {
                 >
                   {item.co}
                 </span>
+                {/* Role string accents on hover */}
                 <span
                   style={{
                     ...mono,
                     fontSize: "10px",
-                    color: t.inkMid,
+                    color: hovIdx === i ? t.accent : t.inkMid,
                     letterSpacing: "0.1em",
+                    transition: "color 0.2s ease",
                   }}
                 >
                   {item.role}
@@ -1026,58 +1226,47 @@ function Timeline({ t, mob }: TimelineProps) {
 }
 
 /* ─── Terminal ───────────────────────────────────────────────────────────── */
-interface TerminalProps {
-  t: Theme;
-  mob: boolean;
-}
+const CMD = "cat about.json";
 
-interface TerminalLine {
-  prompt: boolean;
-  text: string;
-  val?: boolean;
-}
-
-function Terminal({ t, mob }: TerminalProps) {
+function Terminal({ t, mob }: { t: Theme; mob: boolean }) {
   const clock = useClock();
+  const [ref, visible] = useReveal();
+  const [typed, setTyped] = useState(0);
 
-  const lines: TerminalLine[] = [
-    { prompt: true, text: "cat about.json" },
-    { prompt: false, text: "{" },
-    { prompt: false, text: '  "name": "Ajay Pathak",', val: true },
-    { prompt: false, text: '  "location": "Bengaluru, India",', val: true },
+  useEffect(() => {
+    if (!visible) {
+      setTyped(0);
+      return;
+    }
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      setTyped(i);
+      if (i >= CMD.length) clearInterval(id);
+    }, 55);
+    return () => clearInterval(id);
+  }, [visible]);
+
+  const done = typed >= CMD.length;
+
+  const dataLines = [
+    { text: "{", val: false },
+    { text: '  "name": "Ajay Pathak",', val: true },
+    { text: '  "location": "Bengaluru, India",', val: true },
+    { text: '  "local_time": "' + (clock || "--:--:--") + '",', val: true },
+    { text: '  "open_to": ["remote", "hybrid", "full-time"],', val: true },
+    { text: '  "currently_building": "Astra Wealth @ Groww",', val: true },
     {
-      prompt: false,
-      text: '  "local_time": "' + (clock || "--:--:--") + '",',
-      val: true,
-    },
-    {
-      prompt: false,
-      text: '  "open_to": ["remote", "hybrid", "full-time"],',
-      val: true,
-    },
-    {
-      prompt: false,
-      text: '  "currently_building": "Astra Wealth @ Groww",',
-      val: true,
-    },
-    {
-      prompt: false,
       text: '  "ai_workflow": "Claude Code + Cursor for scaffolding, manual review for prod",',
       val: true,
     },
-    {
-      prompt: false,
-      text: '  "obsessed_with": "microfrontend DX and TDD"',
-      val: true,
-    },
-    { prompt: false, text: "}" },
+    { text: '  "obsessed_with": "microfrontend DX and TDD"', val: true },
+    { text: "}", val: false },
   ];
-
-  const [ref, visible] = useReveal();
 
   return (
     <section
-      ref={ref}
+      ref={ref as any}
       className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
       style={{
         padding: mob ? "56px 24px" : "80px 56px",
@@ -1092,10 +1281,11 @@ function Terminal({ t, mob }: TerminalProps) {
           marginBottom: "44px",
         }}
       >
-        <Label t={t}>Terminal</Label>
+        <Label t={t} section>
+          Terminal
+        </Label>
         <div style={{ flex: 1, height: "1px", background: t.border }} />
       </div>
-
       <div
         style={{
           background: t.surface,
@@ -1104,6 +1294,7 @@ function Terminal({ t, mob }: TerminalProps) {
           overflow: "hidden",
         }}
       >
+        {/* macOS traffic light dots */}
         <div
           style={{
             display: "flex",
@@ -1113,7 +1304,7 @@ function Terminal({ t, mob }: TerminalProps) {
             alignItems: "center",
           }}
         >
-          {[t.inkFaint, t.inkFaint, t.inkFaint].map((c, i) => (
+          {["#FF5F57", "#FEBC2E", "#28C840"].map((c, i) => (
             <span
               key={i}
               style={{
@@ -1126,15 +1317,61 @@ function Terminal({ t, mob }: TerminalProps) {
             />
           ))}
         </div>
-        <div style={{ padding: "20px 24px" }}>
-          {lines.map((ln, i) => (
+        {/* Scanline shimmer + typewriter body */}
+        <div
+          style={{
+            padding: "20px 24px",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div className="ap3-scanline" aria-hidden="true" />
+          {/* Prompt line — types in */}
+          <div style={{ display: "flex", marginBottom: "2px" }}>
+            <span
+              style={{
+                ...mono,
+                fontSize: "12px",
+                color: t.ink,
+                marginRight: "8px",
+                lineHeight: 1.8,
+              }}
+            >
+              ajay@portfolio:~$
+            </span>
+            <span
+              style={{
+                ...mono,
+                fontSize: "12px",
+                lineHeight: 1.8,
+                color: t.ink,
+              }}
+            >
+              {CMD.slice(0, typed)}
+            </span>
+            {!done && (
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "7px",
+                  height: "14px",
+                  background: t.ink,
+                  marginLeft: "4px",
+                  verticalAlign: "middle",
+                  animation: "ap3-blink 1s step-end infinite",
+                }}
+              />
+            )}
+          </div>
+          {/* Data lines — reveal only after typing done */}
+          {dataLines.map((ln, i) => (
             <div
               key={i}
               style={{
                 display: "flex",
                 marginBottom: "2px",
-                opacity: visible ? 1 : 0,
-                transform: visible ? "none" : "translateY(4px)",
+                opacity: done ? (visible ? 1 : 0) : 0,
+                transform: done && visible ? "none" : "translateY(4px)",
                 transition:
                   "opacity 0.4s ease " +
                   i * 0.05 +
@@ -1143,30 +1380,17 @@ function Terminal({ t, mob }: TerminalProps) {
                   "s",
               }}
             >
-              {ln.prompt && (
-                <span
-                  style={{
-                    ...mono,
-                    fontSize: "12px",
-                    color: t.ink,
-                    marginRight: "8px",
-                    lineHeight: 1.8,
-                  }}
-                >
-                  ajay@portfolio:~$
-                </span>
-              )}
               <span
                 style={{
                   ...mono,
                   fontSize: "12px",
                   lineHeight: 1.8,
-                  color: ln.prompt ? t.ink : ln.val ? t.inkMid : t.inkFaint,
+                  color: ln.val ? t.inkMid : t.inkFaint,
                 }}
               >
                 {ln.text}
               </span>
-              {i === lines.length - 1 && (
+              {i === dataLines.length - 1 && done && (
                 <span
                   style={{
                     display: "inline-block",
@@ -1188,12 +1412,7 @@ function Terminal({ t, mob }: TerminalProps) {
 }
 
 /* ─── Footer ─────────────────────────────────────────────────────────────── */
-interface FooterProps {
-  t: Theme;
-  mob: boolean;
-}
-
-function Footer({ t, mob }: FooterProps) {
+function Footer({ t, mob }: { t: Theme; mob: boolean }) {
   return (
     <footer
       style={{
@@ -1239,6 +1458,7 @@ function Footer({ t, mob }: FooterProps) {
               borderBottom: "1px solid " + t.border,
               paddingBottom: "1px",
               display: "inline-block",
+              transition: "color 0.2s ease, border-color 0.2s ease",
             }}
           >
             {label}
@@ -1249,64 +1469,18 @@ function Footer({ t, mob }: FooterProps) {
   );
 }
 
-/* ─── Selected work ──────────────────────────────────────────────────────── */
-interface SelectedWorkProps {
-  t: Theme;
-  mob: boolean;
-}
-
-function SelectedWork({ t, mob }: SelectedWorkProps) {
-  const [ref, visible] = useReveal();
-  return (
-    <section
-      ref={ref}
-      className={"ap3-reveal" + (visible ? " ap3-visible" : "")}
-      style={{
-        padding: mob ? "56px 24px" : "80px 56px",
-        borderBottom: "1px solid " + t.border,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "16px",
-          marginBottom: "8px",
-        }}
-      >
-        <Label t={t}>Selected work</Label>
-        <div style={{ flex: 1, height: "1px", background: t.border }} />
-      </div>
-      <div>
-        {WORKS.map((item, i) => (
-          <div
-            key={item.title}
-            className={"ap3-stagger" + (visible ? " ap3-visible" : "")}
-            style={{ transitionDelay: visible ? i * 0.08 + "s" : "0s" }}
-          >
-            <WorkRow
-              item={item}
-              t={t}
-              mob={mob}
-              last={i === WORKS.length - 1}
-            />
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 /* ─── Root ───────────────────────────────────────────────────────────────── */
 export default function AjayPortfolio() {
   const [mode, setMode] = useState<ThemeMode>("dark");
   const t = T[mode];
   const { mob, tab } = useBreakpoint();
   const progress = useScrollProgress();
+  const toastMsg = useToastManager();
   useGlobals();
 
   return (
     <div
+      className={mode}
       style={{
         background: t.bg,
         color: t.ink,
@@ -1322,13 +1496,12 @@ export default function AjayPortfolio() {
         mob={mob}
       />
       <Hero t={t} mob={mob} tab={tab} />
-
       <SelectedWork t={t} mob={mob} />
-
       <Craft t={t} mob={mob} />
       <Timeline t={t} mob={mob} />
       <Terminal t={t} mob={mob} />
       <Footer t={t} mob={mob} />
+      <Toast msg={toastMsg} mode={mode} />
     </div>
   );
 }
