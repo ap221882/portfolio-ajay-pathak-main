@@ -2,13 +2,14 @@ import { MetadataRoute } from 'next';
 
 export const dynamic = "force-static";
 
+const BASE_URL = "https://ajay-pathak.com";
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://ajay-pathak.com";
-  const lastModified = new Date().toISOString();
+  const lastModified = new Date();
 
   return [
     {
-      url: baseUrl,
+      url: BASE_URL,
       lastModified,
       changeFrequency: "weekly",
       priority: 1.0,

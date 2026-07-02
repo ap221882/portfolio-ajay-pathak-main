@@ -139,9 +139,8 @@ function Hero({
             animation: "ap3-rise 0.7s cubic-bezier(0.16,1,0.3,1) 0s both",
           }}
         >
-          Frontend engineer · Bengaluru · 4 YOE
+          Frontend Engineer at Groww · Bengaluru · React, Next.js, TypeScript
         </Label>
-        {}
         <h1
           id="hero-heading"
           className="ap3-name"
@@ -169,11 +168,12 @@ function Hero({
             animation: "ap3-rise 0.8s cubic-bezier(0.16,1,0.3,1) 0.18s both",
           }}
         >
-          I build interfaces that survive production — React, Next.js, and
-          microfrontend systems at companies where{" "}
-          <span style={{ color: t.ink }}>the frontend is the product.</span>{" "}
-          Currently shipping <span style={{ color: t.ink }}>Astra Wealth</span>{" "}
-          at Groww.
+          I’m Ajay Pathak, a Frontend Engineer at Groww in Bengaluru. I build
+          production React and Next.js applications with TypeScript,
+          performance- first{" "}
+          <span style={{ color: t.ink }}>UI architecture</span>, and interfaces
+          that stay fast under real load. Currently shipping{" "}
+          <span style={{ color: t.ink }}>Astra Wealth</span> at Groww.
         </p>
         <div
           style={{
