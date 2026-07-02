@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: BASE_URL,
       lastModified,
       changeFrequency: "weekly",
-      priority: 1.0,
+      priority: 1,
     },
   ];
 }
